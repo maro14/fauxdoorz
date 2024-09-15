@@ -1,40 +1,218 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Here’s a comprehensive **README** for your **Greendoorz** project. This file provides all necessary information for developers or users interacting with the project, including setup, structure, features, and more.
 
-## Getting Started
+---
 
-First, run the development server:
+## Greendoorz - Vacation Rental Platform
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**Greendoorz** is a vacation rental platform built with **Next.js**, **MongoDB**, and **TailwindCSS**. Users can browse properties, search based on location and price, make bookings, and for admin users, manage properties.
+
+### Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Folder Structure](#folder-structure)
+- [Environment Variables](#environment-variables)
+- [API Endpoints](#api-endpoints)
+- [Middleware](#middleware)
+- [Models](#models)
+- [Deployment](#deployment)
+
+---
+
+### Features
+
+- **User Authentication**: Users can sign up, log in, and view properties.
+- **Search Functionality**: Users can filter properties by location and price range.
+- **Bookings**: Authenticated users can book properties based on availability.
+- **Admin Dashboard**: Admin users can manage properties (create, update, delete).
+- **Responsive Design**: Uses **TailwindCSS** for a responsive and modern UI.
+
+---
+
+### Tech Stack
+
+- **Frontend**: [Next.js](https://nextjs.org), [React](https://reactjs.org)
+- **Backend**: [Next.js API Routes](https://nextjs.org/docs/api-routes/introduction)
+- **Database**: [MongoDB](https://www.mongodb.com)
+- **Authentication**: [JWT (JSON Web Token)](https://jwt.io)
+- **Styling**: [TailwindCSS](https://tailwindcss.com)
+
+---
+
+### Prerequisites
+
+- **Node.js** (version 14+ recommended)
+- **MongoDB** (local or MongoDB Atlas for cloud deployment)
+- **PNPM** or **NPM** as the package manager
+
+---
+
+### Installation
+
+1. **Clone the Repository**:
+    ```bash
+    git clone https://github.com/yourusername/greendoorz.git
+    cd greendoorz
+    ```
+
+2. **Install Dependencies**:
+    If you're using **pnpm**:
+    ```bash
+    pnpm install
+    ```
+
+    For **npm**:
+    ```bash
+    npm install
+    ```
+
+3. **Configure Environment Variables**:
+    Create a `.env` file in the root directory and add the following:
+
+    ```bash
+    MONGODB_URI=your_mongodb_connection_string
+    JWT_SECRET=your_jwt_secret_key
+    ```
+
+4. **Run the Development Server**:
+    ```bash
+    pnpm dev
+    ```
+    Or, with **npm**:
+    ```bash
+    npm run dev
+    ```
+
+    Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+---
+
+### Folder Structure
+
+```
+greendoorz/
+├── components/               # Reusable React components
+├── lib/                      # Helper functions (database connection, authentication)
+├── middleware/               # Middlewares for authentication and validation
+├── models/                   # Mongoose models for User, Property, Booking
+├── pages/                    # Next.js pages (includes API routes under `api/`)
+│   ├── api/
+│   │   ├── auth/             # Login, signup APIs
+│   │   ├── properties/       # Property CRUD and search APIs
+│   │   └── bookings/         # Booking CRUD APIs
+├── public/                   # Static assets (images, icons)
+├── styles/                   # Global and module-specific styles
+├── .env                      # Environment variables
+├── next.config.js            # Next.js configuration
+├── package.json              # Project dependencies and scripts
+└── tailwind.config.js        # TailwindCSS configuration
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+### Environment Variables
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Ensure that you have the following environment variables in your `.env` file:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- **MONGODB_URI**: MongoDB connection string.
+- **JWT_SECRET**: Secret key for signing JWT tokens.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Example:
 
-## Learn More
+```bash
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/greendoorz?retryWrites=true&w=majority
+JWT_SECRET=your_jwt_secret_key
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### API Endpoints
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+#### **Auth API**
+- **POST** `/api/auth/signup`: Create a new user account.
+- **POST** `/api/auth/login`: Log in and receive a JWT token.
 
-## Deploy on Vercel
+#### **Properties API**
+- **GET** `/api/properties`: Fetch all properties or search based on location/price.
+- **POST** `/api/properties`: Create a new property (Admin only).
+- **GET** `/api/properties/[id]`: Get a single property by ID.
+- **PUT** `/api/properties/[id]`: Update a property (Admin only).
+- **DELETE** `/api/properties/[id]`: Delete a property (Admin only).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### **Bookings API**
+- **GET** `/api/bookings`: Fetch all bookings (Admin only).
+- **POST** `/api/bookings`: Create a new booking.
+- **GET** `/api/bookings/[id]`: Get a booking by ID.
+- **PUT** `/api/bookings/[id]`: Update a booking.
+- **DELETE** `/api/bookings/[id]`: Delete a booking.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+---
+
+### Middleware
+
+#### **authMiddleware.js**
+- Protects routes by verifying the JWT token. Ensures that only authenticated users can access certain routes.
+
+#### **adminMiddleware.js**
+- Ensures that only admin users can perform certain actions (like creating, updating, or deleting properties).
+
+#### **validatePropertyData.js**
+- Validates property data (e.g., title, location, price) before creating or updating a property.
+
+#### **validateBookingData.js**
+- Validates booking data (e.g., property, start date, end date) before creating or updating a booking.
+
+---
+
+### Models
+
+#### **User Model**
+- Fields: `name`, `email`, `password`, `isAdmin`.
+- Password is hashed before saving. Admin role is managed through the `isAdmin` field.
+
+#### **Property Model**
+- Fields: `title`, `description`, `location`, `price`, `images`, `owner`.
+- Each property is linked to the user who created it (owner).
+
+#### **Booking Model**
+- Fields: `property`, `user`, `startDate`, `endDate`, `totalPrice`.
+- Each booking is linked to a specific user and property.
+
+---
+
+### Deployment
+
+To deploy the application, follow these steps:
+
+1. **Build for Production**:
+    ```bash
+    pnpm build
+    ```
+    Or, with **npm**:
+    ```bash
+    npm run build
+    ```
+
+2. **Start the Production Server**:
+    ```bash
+    pnpm start
+    ```
+
+3. **Deploy to Vercel** (Optional):
+   - If you're using [Vercel](https://vercel.com), simply connect your GitHub repository, and Vercel will handle the build and deployment automatically.
+
+---
+
+### License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+---
+
+### Acknowledgments
+
+- [Next.js](https://nextjs.org/)
+- [MongoDB](https://www.mongodb.com/)
+- [TailwindCSS](https://tailwindcss.com/)

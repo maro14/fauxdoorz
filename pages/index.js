@@ -57,8 +57,9 @@ export default function Home() {
       </section>
 
       {/* Search Box */}
-      <SearchBox onSearch={handleSearch} />
-
+      <section className="px-20">
+        <SearchBox onSearch={handleSearch} />
+      </section>
       {/* Loading Indicator */}
       {loading && <p className="text-center">Loading properties...</p>}
 

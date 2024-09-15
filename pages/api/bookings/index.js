@@ -2,7 +2,7 @@ import dbConnect from '../../../lib/dbConnect';
 import Booking from '../../../models/Booking';
 import authMiddleware from '../../../middleware/authMiddleware';
 import adminMiddleware from '../../../middleware/adminMiddleware';
-import validateBookingData from '../../../middleware/validateBookingData';
+import validateBookingData from '../../../middlewares/validateBookingData';
 
 export default async function handler(req, res) {
   await dbConnect();

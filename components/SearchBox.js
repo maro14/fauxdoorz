@@ -27,7 +27,7 @@ export default function SearchBox({ onSearch }) {
   };
 
   return (
-    <form onSubmit={handleSearch} className="bg-gray-100 p-4 rounded-lg shadow-md mb-6">
+    <form onSubmit={handleSearch} className="bg-gray-200 p-4 rounded-lg shadow-md mb-9">
       {error && <p className="text-red-500 mb-4">{error}</p>}
       
       <div className="flex flex-col md:flex-row md:space-x-4 items-center">
