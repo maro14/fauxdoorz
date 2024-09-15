@@ -1,79 +1,32 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+import dbConnect from '../../../lib/dbConnect';
+import User from '../../../models/User';
+import bcrypt from 'bcryptjs';
 
-export default function Signup() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const router = useRouter();
-  const [error, setError] = useState(null);
+export default async function handler(req, res) {
+  await dbConnect();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await fetch('/api/auth/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, password }),
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method Not Allowed' });
+  }
+
+  const { name, email, password } = req.body;
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
     });
 
-    const data = await res.json();
-
-    if (res.ok) {
-      router.push('/login'); // Redirect to login after successful signup
-    } else {
-      setError(data.message);
-    }
-  };
-
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h1 className="text-2xl font-bold mb-6 text-center">Sign Up</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700">Name</label>
-            <input
-              type="text"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-green-500"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Email</label>
-            <input
-              type="email"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-green-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Password</label>
-            <input
-              type="password"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-green-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          <button
-            type="submit"
-            className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-200"
-          >
-            Sign Up
-          </button>
-        </form>
-        <p className="mt-4 text-center">
-          Already have an account?{' '}
-          <a href="/login" className="text-green-500 hover:underline">
-            Login
-          </a>
-        </p>
-      </div>
-    </div>
-  );
+    await newUser.save();
+    res.status(201).json({ message: 'User created successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating user' });
+  }
 }
