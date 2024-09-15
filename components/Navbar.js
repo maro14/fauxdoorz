@@ -21,21 +21,21 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white shadow-md">
-      <div className="container mx-auto flex justify-between p-4">
-        <Link href="/" className="text-2xl font-bold">
+    <nav className="h-full w-full bg-yellow-300 rounded-md bg-clip-padding backdrop-filter backdrop-blur-2xl bg-opacity-80 border">
+      <div className="container mx-auto flex justify-between p-7">
+        <Link href="/" className="text-2xl font-bold text-black">
           Greendoorz
         </Link>
         <ul className="flex space-x-4">
           <li>
-            <Link href="/properties" className="text-gray-700 hover:text-green-500">
+            <Link href="/properties" className="text-black hover:text-green-500">
               Properties
             </Link>
           </li>
           {user ? (
             <>
               <li>
-                <Link href="/dashboard" className="text-gray-700 hover:text-green-500">
+                <Link href="/dashboard" className="text-black hover:text-green-500">
                   Dashboard
                 </Link>
               </li>
@@ -48,12 +48,12 @@ export default function Navbar() {
           ) : (
             <>
               <li>
-                <Link href="/login" className="text-gray-700 hover:text-green-500">
+                <Link href="/login" className="text-black hover:text-green-500">
                   Login
                 </Link>
               </li>
               <li>
-                <Link href="/signup" className="text-gray-700 hover:text-green-500">
+                <Link href="/signup" className="text-black hover:text-green-500">
                   Signup
                 </Link>
               </li>

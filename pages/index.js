@@ -17,11 +17,11 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="container mx-auto py-12">
+    <div className="container mx-auto py-12 bg-amber-400">
       {/* Hero Section */}
       <section className="text-center mb-12">
-        <h1 className="text-5xl font-bold mb-4">Welcome to Greendoorz</h1>
-        <p className="text-lg text-gray-700 mb-8">
+        <h1 className="text-5xl font-bold mb-4">Welcome to fauxDoorz</h1>
+        <p className="text-lg text-slate-700 mb-8">
           Discover beautiful vacation rentals for your next getaway.
         </p>
         <Link href="/properties" className="bg-green-500 text-white py-2 px-6 rounded-md">
