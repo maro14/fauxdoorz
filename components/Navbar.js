@@ -24,8 +24,8 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="h-full w-full bg-yellow-300 rounded-md bg-clip-padding backdrop-filter backdrop-blur-2xl bg-opacity-80 border">
-      <div className="container mx-auto flex justify-between items-center p-10">
+    <nav className="h-full w-full bg-amber-500 bg-clip-padding backdrop-filter backdrop-blur-3xl bg-opacity-80 border-none shadow-lg">
+      <div className="container h-full w-full bg-amber-500 mx-auto flex justify-between items-center p-7">
         {/* Logo */}
         <Link href="/" passHref>
           <span className="text-2xl font-bold text-black cursor-pointer">Fauxdoorz</span>

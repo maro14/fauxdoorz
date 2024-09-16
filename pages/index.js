@@ -44,14 +44,14 @@ export default function Home() {
   };
 
   return (
-    <div className="container mx-auto py-14 bg-amber-400">
+    <div className="container mx-auto py-14 bg-orange-300">
       {/* Search Box */}
       <section className="px-20">
         <SearchBox onSearch={handleSearch} />
       </section>
 
       {/* Hero Section */}
-      <section className="text-center mb-12" style={{
+      <section className="text-center mb-12 border-none" style={{
         backgroundImage: `url(/House.jpg)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
