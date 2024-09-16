@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 export default function PropertyDetails() {
   const router = useRouter();
@@ -49,7 +50,14 @@ export default function PropertyDetails() {
         {/* Property Images */}
         <div className="flex flex-col space-y-4">
           {property.images.map((image, index) => (
-            <img key={index} src={image} alt={property.title} className="w-full h-64 object-cover" />
+            <Image
+              key={index}
+              src={image}
+              alt={property.title}
+              width={500} // Specify the width
+              height={300} // Specify the height
+              className="w-full h-64 object-cover"
+            />
           ))}
         </div>
 
