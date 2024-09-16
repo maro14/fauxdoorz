@@ -45,10 +45,20 @@ export default function Home() {
 
   return (
     <div className="container mx-auto py-12 bg-amber-400">
+      {/* Search Box */}
+      <section className="px-20">
+        <SearchBox onSearch={handleSearch} />
+      </section>
+
       {/* Hero Section */}
-      <section className="text-center mb-12">
-        <h1 className="text-5xl font-bold mb-4">Welcome to fauxDoorz</h1>
-        <p className="text-lg text-slate-700 mb-8">
+      <section className="text-center mb-12" style={{
+        backgroundImage: `url(/House.jpg)`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '100vh'
+      }}>
+        <h1 className="text-5xl text-white font-bold mb-4">Welcome to fauxDoorz</h1>
+        <p className="text-lg text-white mb-8">
           Discover beautiful vacation rentals for your next getaway.
         </p>
         <Link href="/properties" className="bg-green-500 text-white py-2 px-6 rounded-md">
@@ -56,10 +66,7 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* Search Box */}
-      <section className="px-20">
-        <SearchBox onSearch={handleSearch} />
-      </section>
+
       {/* Loading Indicator */}
       {loading && <p className="text-center">Loading properties...</p>}
 
@@ -72,7 +79,7 @@ export default function Home() {
               <PropertyCard key={property._id} property={property} />
             ))
           ) : (
-            <p className="text-center text-gray-600 col-span-3">
+            <p className="text-center text-white col-span-3">
               No featured properties available at the moment.
             </p>
           )}
@@ -88,7 +95,7 @@ export default function Home() {
               <PropertyCard key={property._id} property={property} />
             ))
           ) : (
-            <p className="text-center text-gray-600 col-span-3">
+            <p className="text-center text-white col-span-3">
               No properties found matching your search criteria.
             </p>
           )}
