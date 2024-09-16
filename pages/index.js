@@ -44,7 +44,7 @@ export default function Home() {
   };
 
   return (
-    <div className="container mx-auto py-12 bg-amber-400">
+    <div className="container mx-auto py-14 bg-amber-400">
       {/* Search Box */}
       <section className="px-20">
         <SearchBox onSearch={handleSearch} />
@@ -57,7 +57,7 @@ export default function Home() {
         backgroundPosition: 'center',
         height: '100vh'
       }}>
-        <h1 className="text-5xl text-white font-bold mb-4">Welcome to fauxDoorz</h1>
+        <h1 className="text-5xl text-white font-bold mb-4 py-6">Welcome to fauxDoorz</h1>
         <p className="text-lg text-white mb-8">
           Discover beautiful vacation rentals for your next getaway.
         </p>

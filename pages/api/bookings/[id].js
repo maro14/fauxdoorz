@@ -1,7 +1,7 @@
 import dbConnect from '../../../lib/dbConnect';
 import Booking from '../../../models/Booking';
-import authMiddleware from '../../../middleware/authMiddleware';
-import validateBookingData from '../../../middleware/validateBookingData';
+import authMiddleware from '../../../middlewares/authMiddleware';
+import validateBookingData from '../../../middlewares/validateBookingData';
 
 export default async function handler(req, res) {
   const { id } = req.query;
