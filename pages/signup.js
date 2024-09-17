@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 
 export default function Signup() {
@@ -12,7 +13,10 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setError(null); // Clear previous errors
+
     try {
+      // Step 1: Sign up the user
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
@@ -24,9 +28,22 @@ export default function Signup() {
       const data = await res.json();
 
       if (res.ok) {
-        router.push('/login'); // Redirect to login on successful signup
+        // Step 2: Automatically log the user in after successful sign-up
+        const loginResult = await signIn('credentials', {
+          redirect: false, // No redirect, just log the user in
+          email,
+          password,
+        });
+
+        if (loginResult.ok) {
+          // Step 3: Redirect to the home page (or wherever you want after login)
+          router.push('/');
+        } else {
+          setError('Error logging in after sign-up');
+        }
       } else {
-        setError(data.message);
+        // Display the specific error message returned from the API
+        setError(data.message || 'An error occurred during signup');
       }
     } catch (error) {
       setError('An unexpected error occurred.');

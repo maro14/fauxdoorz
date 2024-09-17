@@ -1,3 +1,4 @@
+//pages/properties/index.js
 import { useEffect, useState } from 'react';
 import PropertyCard from '../../components/PropertyCard';
 

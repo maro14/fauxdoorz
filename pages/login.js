@@ -1,3 +1,4 @@
+// pages/login.js
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -10,6 +11,15 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Debugging: Ensure email and password are captured correctly
+    console.log("Email:", email);
+    console.log("Password:", password);
+
+    if (!email || !password) {
+      setError('Email and password are required.');
+      return;
+    }
 
     try {
       const res = await fetch('/api/auth/login', {
@@ -29,7 +39,8 @@ export default function Login() {
         setError(data.message);
       }
     } catch (error) {
-      setError('An unexpected error occurred.');
+      console.error('Login request failed:', error);
+      setError('An unexpected error occurred. Please try again later.');
     }
   };
 

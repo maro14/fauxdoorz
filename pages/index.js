@@ -7,15 +7,29 @@ export default function Home() {
   const [properties, setProperties] = useState([]);
   const [featuredProperties, setFeaturedProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // Add error state
 
   useEffect(() => {
-    // Fetch initial featured properties when the page loads
     const fetchFeaturedProperties = async () => {
-      const res = await fetch('/api/properties');
-      const data = await res.json();
-      setFeaturedProperties(data.properties.slice(0, 3)); // Limit to 3 featured properties
-      setProperties(data.properties);
-      setLoading(false);
+      try {
+        const res = await fetch('/api/properties');
+        if (!res.ok) {
+          throw new Error('Failed to fetch properties');
+        }
+        const data = await res.json();
+        
+        // Safeguard against undefined data or properties
+        if (data && data.properties) {
+          setFeaturedProperties(data.properties.slice(0, 3)); // Limit to 3 featured properties
+          setProperties(data.properties);
+        } else {
+          setError('No properties found.');
+        }
+      } catch (err) {
+        setError(err.message || 'An unexpected error occurred.');
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchFeaturedProperties();
@@ -26,49 +40,68 @@ export default function Home() {
     const { location, priceRange } = searchCriteria;
     let query = `/api/properties?`;
 
-    // Add location to the query if provided
     if (location) {
       query += `location=${location}&`;
     }
 
-    // Add price range to the query if provided
     if (priceRange[0]) {
       query += `priceRange=${priceRange[0]}-${priceRange[1]}&`;
     }
 
-    // Fetch the filtered properties from the API
-    const res = await fetch(query);
-    const data = await res.json();
-    setProperties(data.properties);
-    setLoading(false);
+    try {
+      const res = await fetch(query);
+      if (!res.ok) {
+        throw new Error('Failed to fetch search results');
+      }
+      const data = await res.json();
+      if (data && data.properties) {
+        setProperties(data.properties);
+      } else {
+        setError('No properties found for your search criteria.');
+      }
+    } catch (err) {
+      setError(err.message || 'An unexpected error occurred.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="container mx-auto py-14 bg-orange-300">
-      {/* Search Box */}
-      <section className="px-20">
-        <SearchBox onSearch={handleSearch} />
-      </section>
-
+    <div className="container mx-auto bg-orange-300">
       {/* Hero Section */}
-      <section className="text-center mb-12 border-none" style={{
-        backgroundImage: `url(/House.jpg)`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        height: '100vh'
-      }}>
-        <h1 className="text-5xl text-white font-bold mb-4 py-6">Welcome to fauxDoorz</h1>
-        <p className="text-lg text-white mb-8">
-          Discover beautiful vacation rentals for your next getaway.
-        </p>
-        <Link href="/properties" className="bg-green-500 text-white py-2 px-6 rounded-md">
-          Browse Properties
-        </Link>
-      </section>
+      <section
+        className="text-center mb-12 border-none relative flex flex-col items-center justify-center"
+        style={{
+          backgroundImage: `url(/House.jpg)`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          height: '100vh',
+        }}
+      >
+        <div className="absolute inset-0 bg-black opacity-50"></div> {/* Optional dark overlay */}
+        <div className="relative z-10">
+          <h1 className="text-5xl text-white font-bold mb-4 py-6">
+            Welcome to fauxDoorz
+          </h1>
+          <p className="text-lg text-white mb-8">
+            Discover beautiful vacation rentals for your next getaway.
+          </p>
+          <Link href="/properties" className="bg-green-500 text-white py-2 px-6 rounded-md">
+            Browse Properties
+          </Link>
 
+          {/* Search Box */}
+          <div className="mt-8">
+            <SearchBox onSearch={handleSearch} />
+          </div>
+        </div>
+      </section>
 
       {/* Loading Indicator */}
       {loading && <p className="text-center">Loading properties...</p>}
+
+      {/* Error Display */}
+      {error && <p className="text-center text-red-500">{error}</p>}
 
       {/* Featured Properties */}
       <section>

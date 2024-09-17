@@ -1,3 +1,4 @@
+// pages/api/auth/login.js
 import dbConnect from '../../../lib/dbConnect';
 import User from '../../../models/User';
 import bcrypt from 'bcryptjs';
@@ -23,12 +24,14 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ _id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET || 'secret', {
       expiresIn: '1d',
     });
 
     res.status(200).json({ token });
   } catch (error) {
-    res.status(500).json({ message: 'Error logging in' });
+    console.error("Login error:", error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 }
+
