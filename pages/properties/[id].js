@@ -45,10 +45,10 @@ export default function PropertyDetails() {
   }
 
   return (
-    <div className="container mx-auto py-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+    <div className="container mx-6 py-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 my-10">
         {/* Property Images */}
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col space-y-4 space-x-3">
           {property.images.map((image, index) => (
             <Image
               key={index}

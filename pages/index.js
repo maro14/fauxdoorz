@@ -17,11 +17,11 @@ export default function Home() {
           throw new Error('Failed to fetch properties');
         }
         const data = await res.json();
-        
-        // Safeguard against undefined data or properties
-        if (data && data.properties) {
-          setFeaturedProperties(data.properties.slice(0, 3)); // Limit to 3 featured properties
-          setProperties(data.properties);
+
+        // Assuming data is an array of properties
+        if (data && data.length > 0) {
+          setFeaturedProperties(data.slice(0, 3)); // Limit to 3 featured properties
+          setProperties(data);
         } else {
           setError('No properties found.');
         }
@@ -54,8 +54,8 @@ export default function Home() {
         throw new Error('Failed to fetch search results');
       }
       const data = await res.json();
-      if (data && data.properties) {
-        setProperties(data.properties);
+      if (data && data.length > 0) {
+        setProperties(data);
       } else {
         setError('No properties found for your search criteria.');
       }
@@ -67,7 +67,7 @@ export default function Home() {
   };
 
   return (
-    <div className="container mx-auto bg-orange-300">
+    <div className="container mx-auto bg-orange-300 mb-4">
       {/* Hero Section */}
       <section
         className="text-center mb-12 border-none relative flex flex-col items-center justify-center"

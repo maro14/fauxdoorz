@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* globals.css */
+
+body {
+    background-color: #fdba74; /* This is the orange-300 color from Tailwind */
+    min-height: 100vh; /* Ensures it covers the full viewport */
+    margin: 0;
+    padding: 0;
+}
