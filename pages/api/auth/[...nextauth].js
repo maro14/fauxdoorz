@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import dbConnect from '../../../lib/dbConnect'; // Your database connection
 import User from '../../../models/User'; // Your user model
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
 export default NextAuth({
   providers: [
@@ -10,30 +10,37 @@ export default NextAuth({
       name: 'Credentials',
       credentials: {
         email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' }
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         await dbConnect();
 
         const { email, password } = credentials;
+
+        console.log('Credentials received:', { email, password });
+
         const user = await User.findOne({ email });
 
         if (!user) {
+          console.log('No user found with this email');
           throw new Error('No user found with this email');
         }
 
         const isValidPassword = await bcrypt.compare(password, user.password);
+        console.log('Password valid:', isValidPassword);
+
         if (!isValidPassword) {
           throw new Error('Invalid password');
         }
 
+        // If all checks pass, return the user data
         return { id: user._id, name: user.name, email: user.email };
-      }
-    })
+      },
+    }),
   ],
   pages: {
-    signIn: '/login',
-    error: '/auth/error', // Custom error page
+    signIn: '/signup',
+    error: '/auth/error',
   },
   session: {
     jwt: true,
@@ -47,7 +54,8 @@ export default NextAuth({
       if (user) {
         token.id = user.id;
       }
+      console.log('JWT token:', token);
       return token;
-    }
-  }
+    },
+  },
 });

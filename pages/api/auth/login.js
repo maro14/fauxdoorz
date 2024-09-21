@@ -1,7 +1,7 @@
 // pages/api/auth/login.js
 import dbConnect from '../../../lib/dbConnect';
 import User from '../../../models/User';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {

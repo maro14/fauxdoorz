@@ -1,4 +1,3 @@
-//pages/signup.js
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
@@ -9,12 +8,13 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError(null); // Clear previous errors
+    setIsLoading(true); // Set loading state
 
     try {
       // Step 1: Sign up the user
@@ -27,27 +27,30 @@ export default function Signup() {
       });
 
       const data = await res.json();
+      console.log('Signup API response:', data);
 
       if (res.ok) {
         // Step 2: Automatically log the user in after successful sign-up
         const loginResult = await signIn('credentials', {
-          redirect: false, // No redirect, just log the user in
+          redirect: false,
           email,
           password,
         });
+        console.log('Login result:', loginResult);
 
         if (loginResult.ok) {
-          // Step 3: Redirect to the home page (or wherever you want after login)
-          router.push('/');
+          router.push('/'); // Step 3: Redirect to the home page after successful login
         } else {
           setError('Error logging in after sign-up');
         }
       } else {
-        // Display the specific error message returned from the API
         setError(data.message || 'An error occurred during signup');
       }
     } catch (error) {
+      console.error('Signup error:', error);
       setError('An unexpected error occurred.');
+    } finally {
+      setIsLoading(false); // Remove loading state
     }
   };
 
@@ -63,6 +66,7 @@ export default function Signup() {
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-green-500"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              required
             />
           </div>
           <div className="mb-4">
@@ -72,6 +76,7 @@ export default function Signup() {
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-green-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
           <div className="mb-4">
@@ -81,14 +86,16 @@ export default function Signup() {
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-green-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <button
             type="submit"
             className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-200"
+            disabled={isLoading} // Disable button when loading
           >
-            Sign Up
+            {isLoading ? 'Signing Up...' : 'Sign Up'}
           </button>
         </form>
         <p className="mt-4 text-center">

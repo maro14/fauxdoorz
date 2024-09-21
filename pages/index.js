@@ -104,7 +104,7 @@ export default function Home() {
       {error && <p className="text-center text-red-500">{error}</p>}
 
       {/* Featured Properties */}
-      <section>
+      <section className="mx-4">
         <h2 className="text-3xl font-bold mb-6 text-center">Featured Properties</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuredProperties.length > 0 ? (
@@ -120,7 +120,7 @@ export default function Home() {
       </section>
 
       {/* Search Results */}
-      <section className="mt-12">
+      <section className="mt-12 mx-4">
         <h2 className="text-3xl font-bold mb-6 text-center">Search Results</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {properties.length > 0 ? (

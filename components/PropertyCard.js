@@ -6,11 +6,13 @@ export default function PropertyCard({ property }) {
   return (
     <div className="border p-4 rounded-lg shadow-lg bg-slate-50">
       <Image
-        src={property.Image}
+        src={property.images}
         alt={property.title}
         width={500} // Specify a width
-        height={192} // Specify a height
+        height={300} // Specify a height
         className="w-full h-48 object-cover rounded-lg"
+        fill={false} // {true} | {false}
+        layout="responsive"
       />
       <h2 className="text-xl font-bold mt-4">{property.title}</h2>
       <p className="text-gray-900">{property.location}</p>
