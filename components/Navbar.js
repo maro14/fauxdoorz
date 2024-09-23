@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useCallback } from 'react';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
@@ -35,7 +36,9 @@ export default function Navbar() {
       <div className="container h-full w-full bg-amber-500 mx-auto flex justify-between items-center p-7">
         {/* Logo */}
         <Link href="/" passHref>
-          <span className="text-2xl font-bold text-black cursor-pointer">Fauxdoorz</span>
+          <div className="flex items-center cursor-pointer">
+            <Image src="/house logo.png" alt="Logo" width={50} height={50} />
+          </div>
         </Link>
 
         {/* Links and User Actions */}
