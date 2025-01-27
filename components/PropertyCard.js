@@ -17,7 +17,7 @@ export default function PropertyCard({ property }) {
       <h2 className="text-xl font-bold mt-4">{property.title}</h2>
       <p className="text-gray-900">{property.location}</p>
       <p className="text-lg font-bold">${property.price} per night</p>
-      <Link href={`/properties/${property._id}`} className="text-green-500 mt-4 block">
+      <Link href={`/properties/${property._id}`} className="text-green-950 mt-4 block">
         View Details
       </Link>
     </div>

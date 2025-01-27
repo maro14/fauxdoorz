@@ -14,6 +14,17 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null); // Clear previous errors
+
+    // Client-side validation
+    if (!name || !email || !password) {
+      setError('All fields are required.');
+      return;
+    }
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return;
+    }
+
     setIsLoading(true); // Set loading state
 
     try {
