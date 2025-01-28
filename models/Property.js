@@ -12,27 +12,36 @@ const PropertySchema = new mongoose.Schema({
   location: {
     type: String,
     required: [true, 'Please provide the location of the property'],
+    index: true, // ✅ Faster search queries
+  },
+  available: {
+    type: Boolean,
+    default: true
   },
   price: {
     type: Number,
     required: [true, 'Please provide the price per night'],
   },
   images: {
-    type: [String], // Array of image URLs
+    type: [String], // ✅ Array of image URLs
     required: true,
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Reference to the user who owns the property
+    ref: 'User',
     required: true,
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-// Index for faster search by location
+// Index for search optimization
 PropertySchema.index({ location: 'text' });
 
 export default mongoose.models.Property || mongoose.model('Property', PropertySchema);

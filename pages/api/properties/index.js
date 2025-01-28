@@ -1,44 +1,45 @@
 import dbConnect from '../../../lib/dbConnect';
 import Property from '../../../models/Property';
 import authMiddleware from '../../../middlewares/authMiddleware';
-import adminMiddleware from '../../../middlewares/adminMiddleware';
-import validatePropertyData from '../../../middlewares/validatePropertyData';
 
 export default async function handler(req, res) {
   await dbConnect();
 
   if (req.method === 'GET') {
     try {
-      const { location, priceRange } = req.query;
-      const query = {};
-      
-      if (location) {
-        query.$text = { $search: location };
-      }
-
-      if ( priceRange) {
-        const [ min , max] = priceRange.split('-').map(Number)
-        query.price = {$gte: min };
-        if (max !== Infinity ) query.price.$lte = max;
-      }
-
-      const properties = await Property.find(query);
+      const properties = await Property.find();
       res.status(200).json(properties);
     } catch (error) {
-      res.status(500).json({ message: 'Error fetching properties' });
+      res.status(500).json({ message: 'Error fetching properties', error: error.message });
     }
   } 
-  else if (req.method === 'POST') {
-    // Ensure only admins can create properties
-    return authMiddleware(adminMiddleware(validatePropertyData(async (req, res) => {
+  else {
+    res.status(405).json({ message: `Method ${req.method} Not Allowed` });
+  }
+
+  if (req.method === 'POST') {
+    return authMiddleware(async (req, res) => {
       try {
-        const newProperty = new Property(req.body);
-        await newProperty.save();
-        res.status(201).json(newProperty);
+        const { propertyId } = req.body;
+
+        // Find the property
+        const property = await Property.findById(propertyId);
+        if (!property) return res.status(404).json({ message: 'Property not found' });
+
+        // Prevent double booking
+        if (!property.available) {
+          return res.status(400).json({ message: 'This property is already booked' });
+        }
+
+        // Mark property as booked
+        property.available = false;
+        await property.save();
+
+        res.status(200).json({ message: 'Property booked successfully', property });
       } catch (error) {
-        res.status(500).json({ message: 'Error creating property' });
+        res.status(500).json({ message: 'Error booking property', error: error.message });
       }
-    })))(req, res);
+    })(req, res);
   } 
   else {
     res.status(405).json({ message: 'Method Not Allowed' });

@@ -1,7 +1,6 @@
 import dbConnect from '../../../lib/dbConnect';
 import Property from '../../../models/Property';
 import authMiddleware from '../../../middlewares/authMiddleware';
-import adminMiddleware from '../../../middlewares/adminMiddleware';
 
 export default async function handler(req, res) {
   await dbConnect();
@@ -10,41 +9,34 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       const property = await Property.findById(id);
-      if (!property) {
-        return res.status(404).json({ message: 'Property not found' });
-      }
+      if (!property) return res.status(404).json({ message: 'Property not found' });
       res.status(200).json(property);
     } catch (error) {
-      res.status(500).json({ message: 'Error fetching property' });
+      res.status(500).json({ message: 'Error fetching property', error: error.message });
     }
   } 
   else if (req.method === 'PUT') {
-    // Ensure only admins can update properties
-    return authMiddleware(adminMiddleware(async (req, res) => {
+    return authMiddleware(async (req, res) => {
       try {
-        const updatedProperty = await Property.findByIdAndUpdate(id, req.body, { new: true });
-        if (!updatedProperty) {
-          return res.status(404).json({ message: 'Property not found' });
+        const { available } = req.body;
+
+        // Prevent booking if already booked
+        const property = await Property.findById(id);
+        if (!property) return res.status(404).json({ message: 'Property not found' });
+
+        if (property.available === false && available !== true) {
+          return res.status(400).json({ message: 'This property is already booked' });
         }
-        res.status(200).json(updatedProperty);
+
+        property.available = available;
+        property.updatedAt = Date.now();
+        await property.save();
+
+        res.status(200).json(property);
       } catch (error) {
-        res.status(500).json({ message: 'Error updating property' });
+        res.status(500).json({ message: 'Error updating property status', error: error.message });
       }
-    }))(req, res);
-  } 
-  else if (req.method === 'DELETE') {
-    // Ensure only admins can delete properties
-    return authMiddleware(adminMiddleware(async (req, res) => {
-      try {
-        const deletedProperty = await Property.findByIdAndDelete(id);
-        if (!deletedProperty) {
-          return res.status(404).json({ message: 'Property not found' });
-        }
-        res.status(200).json({ message: 'Property deleted successfully' });
-      } catch (error) {
-        res.status(500).json({ message: 'Error deleting property' });
-      }
-    }))(req, res);
+    })(req, res);
   } 
   else {
     res.status(405).json({ message: 'Method Not Allowed' });
