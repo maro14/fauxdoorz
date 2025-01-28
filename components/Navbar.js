@@ -2,34 +2,21 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
+import { useSession, signOut } from 'next-auth/react';
 
 export default function Navbar() {
-  const [user, setUser] = useState(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const { data: session } = useSession();
+  const user = session?.user;
   const router = useRouter();
-
-  useEffect(() => {
-    setIsMounted(true); // Component has mounted
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('token');
-      if (token) {
-        setUser(true);
-      }
-    }
-  }, []);
 
   const logout = useCallback(() => {
     if (window.confirm('Are you sure you want to log out?')) {
-      localStorage.removeItem('token');
-      setUser(null);
-      router.push('/');
+      signOut({ redirect: false }).then(() => {
+        localStorage.removeItem('token');
+        router.push('/');
+      });
     }
   }, [router]);
-
-  // Prevent rendering until the component has mounted on the client
-  if (!isMounted) {
-    return null;
-  }
 
   return (
     <nav className="h-full w-full bg-amber-500 bg-clip-padding backdrop-filter backdrop-blur-3xl bg-opacity-80 border-none shadow-lg">
@@ -75,7 +62,9 @@ export default function Navbar() {
               </li>
               <li>
                 <Link href="/signup" passHref>
-                  <span className="text-white bg-green-700 hover:bg-green-600 cursor-pointer px-4 py-2 rounded">Sign In</span>
+                  <span className="text-white bg-green-700 hover:bg-green-600 cursor-pointer px-4 py-2 rounded">
+                    Sign Up
+                  </span>
                 </Link>
               </li>
             </>

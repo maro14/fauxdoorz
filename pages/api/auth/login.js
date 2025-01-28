@@ -23,8 +23,7 @@ export default async function handler(req, res) {
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
-
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET || 'secret', {
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: '1d',
     });
 

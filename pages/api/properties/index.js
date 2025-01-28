@@ -9,7 +9,20 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      const properties = await Property.find({});
+      const { location, priceRange } = req.query;
+      const query = {};
+      
+      if (location) {
+        query.$text = { $search: location };
+      }
+
+      if ( priceRange) {
+        const [ min , max] = priceRange.split('-').map(Number)
+        query.price = {$gte: min };
+        if (max !== Infinity ) query.price.$lte = max;
+      }
+
+      const properties = await Property.find(query);
       res.status(200).json(properties);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching properties' });

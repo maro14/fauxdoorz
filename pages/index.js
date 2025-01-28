@@ -44,7 +44,7 @@ export default function Home() {
       query += `location=${location}&`;
     }
 
-    if (priceRange[0]) {
+    if (Array.isArray(priceRange) && priceRange.length > 0) {
       query += `priceRange=${priceRange[0]}-${priceRange[1]}&`;
     }
 

@@ -10,20 +10,31 @@ export default function SearchBox({ onSearch }) {
   const handleSearch = (e) => {
     e.preventDefault();
 
-    // Step 1: Validate inputs before triggering search
-    if (minPrice !== '' && maxPrice !== '' && Number(minPrice) > Number(maxPrice)) {
-      setError('Min price cannot be greater than max price');
+    // Reset previous errors
+    setError(null);
+
+    // Validate price inputs
+    const min = Number(minPrice);
+    const max = Number(maxPrice);
+
+    if (minPrice && maxPrice && min > max) {
+      setError('Minimum price cannot be greater than maximum price');
       return;
     }
 
-    // Step 2: Build search criteria object
+    if ((minPrice && min < 0) || (maxPrice && max < 0)) {
+      setError('Price values cannot be negative');
+      return;
+    }
+
+    // Build search criteria
     const searchCriteria = {
       location: location.trim(),
-      priceRange: [minPrice || 0, maxPrice || Infinity], // default to full range if no input
+      priceRange: minPrice && maxPrice ? [min, max] : undefined, // Ensuring priceRange is an array
     };
 
-    setError(null); // Clear previous errors
-    onSearch(searchCriteria); // Trigger search function passed from parent component
+    // Trigger search with validated criteria
+    onSearch(searchCriteria);
   };
 
   return (
@@ -39,6 +50,7 @@ export default function SearchBox({ onSearch }) {
             onChange={(e) => setLocation(e.target.value)}
             className="w-full p-2 border rounded-md text-sm"
             placeholder="Location"
+            aria-label="Search by location"
           />
         </div>
 
@@ -46,10 +58,13 @@ export default function SearchBox({ onSearch }) {
         <div className="w-full md:w-1/3 mb-2 md:mb-0">
           <input
             type="number"
+            min="0"
+            step="1"
             value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
+            onChange={(e) => setMinPrice(e.target.value.replace(/[^0-9]/g, ''))}
             className="w-full p-2 border rounded-md text-sm"
             placeholder="Min Price"
+            aria-label="Minimum price"
           />
         </div>
 
@@ -57,10 +72,13 @@ export default function SearchBox({ onSearch }) {
         <div className="w-full md:w-1/3 mb-2 md:mb-0">
           <input
             type="number"
+            min="0"
+            step="1"
             value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
+            onChange={(e) => setMaxPrice(e.target.value.replace(/[^0-9]/g, ''))}
             className="w-full p-2 border rounded-md text-sm"
             placeholder="Max Price"
+            aria-label="Maximum price"
           />
         </div>
 
@@ -68,7 +86,8 @@ export default function SearchBox({ onSearch }) {
         <div className="w-full md:w-auto mt-2 md:mt-0">
           <button
             type="submit"
-            className="bg-green-500 text-white py-2 px-6 rounded-md w-full md:w-auto text-sm"
+            className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-md w-full md:w-auto text-sm transition-colors duration-200"
+            aria-label="Search properties"
           >
             Search
           </button>
