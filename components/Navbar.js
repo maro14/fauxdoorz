@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
+import { useCallback } from 'react'; // ✅ Import useCallback
 
 export default function Navbar() {
   const { data: session } = useSession();

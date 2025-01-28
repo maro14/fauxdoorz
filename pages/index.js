@@ -6,24 +6,24 @@ import SearchBox from '../components/SearchBox';
 export default function Home() {
   const [properties, setProperties] = useState([]);
   const [featuredProperties, setFeaturedProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // Add error state
+  const [loading, setLoading] = useState(false); // 🔄 Initially false to prevent unnecessary "loading"
+  const [error, setError] = useState(null);
+  const [searchPerformed, setSearchPerformed] = useState(false); // 🔄 Tracks whether search was performed
 
   useEffect(() => {
     const fetchFeaturedProperties = async () => {
       try {
+        setLoading(true);
         const res = await fetch('/api/properties');
         if (!res.ok) {
           throw new Error('Failed to fetch properties');
         }
         const data = await res.json();
 
-        // Assuming data is an array of properties
         if (data && data.length > 0) {
-          setFeaturedProperties(data.slice(0, 3)); // Limit to 3 featured properties
-          setProperties(data);
+          setFeaturedProperties(data.slice(0, 6)); // Show only 6 featured properties
         } else {
-          setError('No properties found.');
+          setError('No featured properties found.');
         }
       } catch (err) {
         setError(err.message || 'An unexpected error occurred.');
@@ -37,6 +37,9 @@ export default function Home() {
 
   const handleSearch = async (searchCriteria) => {
     setLoading(true);
+    setSearchPerformed(true); // ✅ Mark that search has been performed
+    setError(null); // Reset error state
+
     const { location, priceRange } = searchCriteria;
     let query = `/api/properties?`;
 
@@ -54,9 +57,11 @@ export default function Home() {
         throw new Error('Failed to fetch search results');
       }
       const data = await res.json();
+
       if (data && data.length > 0) {
         setProperties(data);
       } else {
+        setProperties([]); // Reset properties if no results
         setError('No properties found for your search criteria.');
       }
     } catch (err) {
@@ -78,7 +83,7 @@ export default function Home() {
           height: '100vh',
         }}
       >
-        <div className="absolute inset-0 bg-black opacity-50"></div> {/* Optional dark overlay */}
+        <div className="absolute inset-0 bg-black opacity-50"></div> {/* Dark overlay */}
         <div className="relative z-10">
           <h1 className="text-5xl text-white font-bold mb-4 py-6">
             Welcome to fauxDoorz
@@ -119,21 +124,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Search Results */}
-      <section className="mt-12 mx-4">
-        <h2 className="text-3xl font-bold mb-6 text-center">Search Results</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {properties.length > 0 ? (
-            properties.map((property) => (
-              <PropertyCard key={property._id} property={property} />
-            ))
-          ) : (
-            <p className="text-center text-white col-span-3">
-              No properties found matching your search criteria.
-            </p>
-          )}
-        </div>
-      </section>
+      {/* Search Results - Only Show if Search is Performed */}
+      {searchPerformed && (
+        <section className="mt-12 mx-4">
+          <h2 className="text-3xl font-bold mb-6 text-center">Search Results</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {properties.length > 0 ? (
+              properties.map((property) => (
+                <PropertyCard key={property._id} property={property} />
+              ))
+            ) : (
+              <p className="text-center text-white col-span-3">
+                No properties found matching your search criteria.
+              </p>
+            )}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

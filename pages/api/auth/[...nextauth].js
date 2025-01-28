@@ -29,17 +29,16 @@ export default NextAuth({
         const isValidPassword = await bcrypt.compare(password, user.password);
         console.log('Password valid:', isValidPassword);
 
-        if (!isValidPassword) {
-          throw new Error('Invalid password');
+        if (!user.password) {
+          throw new Error('Invalid user data');
         }
-
         // If all checks pass, return the user data
         return { id: user._id, name: user.name, email: user.email };
       },
     }),
   ],
   pages: {
-    signIn: '/signup',
+    signIn: '/login',
     error: '/auth/error',
   },
   session: {
