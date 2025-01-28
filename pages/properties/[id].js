@@ -1,16 +1,17 @@
+// pages/properties/[id].js (Enhanced Property Details Page)
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 export default function PropertyDetails() {
   const router = useRouter();
-  const { id } = router.query; // Get the property ID from the URL
+  const { id } = router.query;
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!id) return; // If no ID, return early
+    if (!id) return;
 
     async function fetchProperty() {
       try {
@@ -33,7 +34,7 @@ export default function PropertyDetails() {
   }, [id]);
 
   if (loading) {
-    return <p className="text-center mt-10">Loading property details...</p>;
+    return <div className="text-center text-lg font-semibold mt-10 animate-pulse">Loading property details...</div>;
   }
 
   if (error) {
@@ -45,29 +46,35 @@ export default function PropertyDetails() {
   }
 
   return (
-    <div className="container mx-6 py-10">
+    <div className="container mx-auto px-6 py-10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 my-10">
-        {/* Property Images */}
-        <div className="flex flex-col space-y-4 space-x-3">
+        {/* Property Image Gallery */}
+        <div className="space-y-4">
           {property.images.map((image, index) => (
             <Image
               key={index}
               src={image}
               alt={property.title}
-              width={500} // Specify the width
-              height={300} // Specify the height
-              className="w-full h-64 object-cover"
+              width={800}
+              height={500}
+              className="w-full h-80 object-cover rounded-lg shadow-md hover:shadow-lg transition"
             />
           ))}
         </div>
 
         {/* Property Details */}
-        <div>
-          <h1 className="text-4xl font-bold mb-4">{property.title}</h1>
-          <p className="text-lg text-gray-700 mb-4">{property.description}</p>
-          <p className="text-green-500 text-2xl font-bold mb-4">${property.price} / night</p>
-          <p className="text-gray-600 mb-4">Location: {property.location}</p>
-          {/* Add any additional details you want here */}
+        <div className="flex flex-col justify-between">
+          <div>
+            <h1 className="text-4xl font-bold mb-4">{property.title}</h1>
+            <p className="text-gray-700 text-lg mb-4">{property.description}</p>
+            <p className="text-green-500 text-2xl font-bold mb-4">${property.price} / night</p>
+            <p className="text-gray-600">📍 {property.location}</p>
+          </div>
+          
+          {/* Booking Button */}
+          <button className="mt-6 bg-blue-500 text-white py-3 px-6 rounded-md text-lg font-semibold hover:bg-blue-600 transition">
+            Book Now
+          </button>
         </div>
       </div>
     </div>

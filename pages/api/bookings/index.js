@@ -1,4 +1,4 @@
-import dbConnect from '../../../lib/dbConnect';
+import dbConnect from '../../../utils/dbConnect';
 import Booking from '../../../models/Booking';
 import authMiddleware from '../../../middlewares/authMiddleware';
 import adminMiddleware from '../../../middlewares/adminMiddleware';

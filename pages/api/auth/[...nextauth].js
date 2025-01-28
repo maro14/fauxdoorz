@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import dbConnect from '../../../lib/dbConnect'; // Your database connection
+import dbConnect from '../../../utils/dbConnect'; // Your database connection
 import User from '../../../models/User'; // Your user model
 import bcrypt from 'bcrypt';
 

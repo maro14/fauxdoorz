@@ -1,4 +1,4 @@
-import dbConnect from '../../../lib/dbConnect';
+import dbConnect from '../../../utils/dbConnect';
 import Property from '../../../models/Property';
 import authMiddleware from '../../../middlewares/authMiddleware';
 

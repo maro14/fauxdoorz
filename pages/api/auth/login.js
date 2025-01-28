@@ -1,5 +1,5 @@
 // pages/api/auth/login.js
-import dbConnect from '../../../lib/dbConnect';
+import dbConnect from '../../../utils/dbConnect';
 import User from '../../../models/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
