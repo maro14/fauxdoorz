@@ -2,12 +2,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
-import { useCallback } from 'react'; // ✅ Import useCallback
+import { useCallback, useState } from 'react';
 
 export default function Navbar() {
   const { data: session } = useSession();
   const user = session?.user;
   const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const logout = useCallback(() => {
     if (window.confirm('Are you sure you want to log out?')) {
@@ -19,57 +20,127 @@ export default function Navbar() {
   }, [router]);
 
   return (
-    <nav className="h-full w-full bg-amber-500 bg-clip-padding backdrop-filter backdrop-blur-3xl bg-opacity-80 border-none shadow-lg">
-      <div className="container h-full w-full bg-amber-500 mx-auto flex justify-between items-center p-7">
-        {/* Logo */}
-        <Link href="/" passHref>
-          <div className="flex items-center cursor-pointer">
-            <Image src="/house logo.png" alt="Logo" width={50} height={50} />
-          </div>
-        </Link>
-
-        {/* Links and User Actions */}
-        <ul className="hidden md:flex space-x-6 items-center">
-          <li>
-            <Link href="/properties" passHref>
-              <span className="text-black hover:text-green-500 cursor-pointer">Properties</span>
+    <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          {/* Logo Section */}
+          <div className="flex-shrink-0 flex items-center">
+            <Link href="/" className="flex items-center space-x-2">
+              <Image src="/house logo.png" alt="Logo" width={40} height={40} className="rounded-lg" />
+              <span className="text-xl font-bold text-gray-800">fauxDoorz</span>
             </Link>
-          </li>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link href="/properties" 
+              className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
+              Browse Properties
+            </Link>
+
+            {user ? (
+              <>
+                <Link href="/dashboard" 
+                  className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+                  Dashboard
+                </Link>
+                
+                {/* User Menu */}
+                <div className="relative ml-3">
+                  <div className="flex items-center space-x-4">
+                    <span className="text-sm font-medium text-gray-700">
+                      {user.name || user.email}
+                    </span>
+                    <button
+                      onClick={logout}
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link href="/login"
+                  className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+                  Login
+                </Link>
+                <Link href="/signup"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                  Sign Up
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              aria-expanded="false"
+            >
+              <span className="sr-only">Open main menu</span>
+              {/* Hamburger icon */}
+              <svg
+                className={`${isMenuOpen ? 'hidden' : 'block'} h-6 w-6`}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              {/* Close icon */}
+              <svg
+                className={`${isMenuOpen ? 'block' : 'hidden'} h-6 w-6`}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden bg-white border-t`}>
+        <div className="px-2 pt-2 pb-3 space-y-1">
+          <Link href="/properties"
+            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+            Browse Properties
+          </Link>
 
           {user ? (
             <>
-              <li>
-                <Link href="/dashboard" passHref>
-                  <span className="text-black hover:text-green-500 cursor-pointer">Dashboard</span>
-                </Link>
-              </li>
-              <li>
-                <button
-                  onClick={logout}
-                  className="text-gray-700 hover:text-red-500 transition-colors duration-200"
-                  aria-label="Logout"
-                >
-                  Logout
-                </button>
-              </li>
+              <Link href="/dashboard"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                Dashboard
+              </Link>
+              <button
+                onClick={logout}
+                className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-700 hover:bg-gray-50"
+              >
+                Logout
+              </button>
             </>
           ) : (
             <>
-              <li>
-                <Link href="/login" passHref>
-                  <span className="text-black hover:text-green-500 cursor-pointer">Login</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/signup" passHref>
-                  <span className="text-white bg-green-700 hover:bg-green-600 cursor-pointer px-4 py-2 rounded">
-                    Sign Up
-                  </span>
-                </Link>
-              </li>
+              <Link href="/login"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                Login
+              </Link>
+              <Link href="/signup"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                Sign Up
+              </Link>
             </>
           )}
-        </ul>
+        </div>
       </div>
     </nav>
   );

@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         res.status(500).json({ message: 'Error fetching bookings' });
       }
     }))(req, res);
-  }
+  } 
 
   if (req.method === 'POST') {
     // Only authenticated users can create bookings
@@ -31,4 +31,5 @@ export default async function handler(req, res) {
       }
     }))(req, res);
   }
+
 }

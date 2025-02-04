@@ -1,23 +1,33 @@
-Here’s a comprehensive **README** for your **Greendoorz** project. This file provides all necessary information for developers or users interacting with the project, including setup, structure, features, and more.
+## FauxDoorz - Vacation Rental Platform
 
----
-
-## Greendoorz - Vacation Rental Platform
-
-**Greendoorz** is a vacation rental platform built with **Next.js**, **MongoDB**, and **TailwindCSS**. Users can browse properties, search based on location and price, make bookings, and for admin users, manage properties.
+**FauxDoorz** is a vacation rental platform built with **Next.js**, **MongoDB**, and **TailwindCSS**. Users can browse properties, search based on location and price, make bookings, and for admin users, manage properties.
 
 ### Table of Contents
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Folder Structure](#folder-structure)
-- [Environment Variables](#environment-variables)
-- [API Endpoints](#api-endpoints)
-- [Middleware](#middleware)
-- [Models](#models)
-- [Deployment](#deployment)
+- [FauxDoorz - Vacation Rental Platform](#fauxdoorz---vacation-rental-platform)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Tech Stack](#tech-stack)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Folder Structure](#folder-structure)
+  - [Environment Variables](#environment-variables)
+  - [API Endpoints](#api-endpoints)
+    - [**Auth API**](#auth-api)
+    - [**Properties API**](#properties-api)
+    - [**Bookings API**](#bookings-api)
+  - [Middleware](#middleware)
+    - [**authMiddleware.js**](#authmiddlewarejs)
+    - [**adminMiddleware.js**](#adminmiddlewarejs)
+    - [**validatePropertyData.js**](#validatepropertydatajs)
+    - [**validateBookingData.js**](#validatebookingdatajs)
+  - [Models](#models)
+    - [**User Model**](#user-model)
+    - [**Property Model**](#property-model)
+    - [**Booking Model**](#booking-model)
+  - [Deployment](#deployment)
+  - [License](#license)
+  - [Acknowledgments](#acknowledgments)
 
 ---
 
@@ -131,10 +141,12 @@ JWT_SECRET=your_jwt_secret_key
 ### API Endpoints
 
 #### **Auth API**
+
 - **POST** `/api/auth/signup`: Create a new user account.
 - **POST** `/api/auth/login`: Log in and receive a JWT token.
 
 #### **Properties API**
+
 - **GET** `/api/properties`: Fetch all properties or search based on location/price.
 - **POST** `/api/properties`: Create a new property (Admin only).
 - **GET** `/api/properties/[id]`: Get a single property by ID.
@@ -142,6 +154,7 @@ JWT_SECRET=your_jwt_secret_key
 - **DELETE** `/api/properties/[id]`: Delete a property (Admin only).
 
 #### **Bookings API**
+
 - **GET** `/api/bookings`: Fetch all bookings (Admin only).
 - **POST** `/api/bookings`: Create a new booking.
 - **GET** `/api/bookings/[id]`: Get a booking by ID.
@@ -153,15 +166,19 @@ JWT_SECRET=your_jwt_secret_key
 ### Middleware
 
 #### **authMiddleware.js**
+
 - Protects routes by verifying the JWT token. Ensures that only authenticated users can access certain routes.
 
 #### **adminMiddleware.js**
+
 - Ensures that only admin users can perform certain actions (like creating, updating, or deleting properties).
 
 #### **validatePropertyData.js**
+
 - Validates property data (e.g., title, location, price) before creating or updating a property.
 
 #### **validateBookingData.js**
+
 - Validates booking data (e.g., property, start date, end date) before creating or updating a booking.
 
 ---
