@@ -13,49 +13,80 @@ export default NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        await dbConnect();
+        try {
+          await dbConnect();
 
-        const { email, password } = credentials;
+          // Check if credentials exist
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error('Please provide both email and password');
+          }
 
-        console.log('Credentials received:', { email, password });
+          // Find user and explicitly select password field
+          const user = await User.findOne({ email: credentials.email }).select('+password');
+          
+          if (!user) {
+            throw new Error('No user found with this email');
+          }
 
-        const user = await User.findOne({ email });
+          // Debug log (remove in production)
+          console.log('Found user:', user.email);
 
-        if (!user) {
-          console.log('No user found with this email');
-          throw new Error('No user found with this email');
+          // Ensure password exists
+          if (!user.password) {
+            throw new Error('User has no password set');
+          }
+
+          // Compare passwords
+          const isValid = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
+
+          // Debug log (remove in production)
+          console.log('Password valid:', isValid);
+
+          if (!isValid) {
+            throw new Error('Invalid password');
+          }
+
+          // Return user without password
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        } catch (error) {
+          console.error('Auth error details:', error);
+          throw error;
         }
-
-        const isValidPassword = await bcrypt.compare(password, user.password);
-        console.log('Password valid:', isValidPassword);
-
-        if (!user.password) {
-          throw new Error('Invalid user data');
-        }
-        // If all checks pass, return the user data
-        return { id: user._id, name: user.name, email: user.email };
       },
     }),
   ],
   pages: {
-    signIn: '/login',
+    signIn: '/auth/signin',
     error: '/auth/error',
   },
   session: {
-    jwt: true,
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async session({ session, token }) {
-      session.user.id = token.id;
-      return session;
-    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.role = user.role;
       }
-      console.log('JWT token:', token);
       return token;
     },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.role = token.role;
+      }
+      return session;
+    },
   },
+  debug: process.env.NODE_ENV === 'development',
+  secret: process.env.NEXTAUTH_SECRET,
 });

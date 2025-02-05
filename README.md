@@ -142,8 +142,11 @@ JWT_SECRET=your_jwt_secret_key
 
 #### **Auth API**
 
-- **POST** `/api/auth/signup`: Create a new user account.
-- **POST** `/api/auth/login`: Log in and receive a JWT token.
+- **POST** `/api/auth/signin`: Sign in using NextAuth.js credentials provider
+- **POST** `/api/auth/signup`: Create a new user account
+- **GET** `/api/auth/session`: Get current session information
+- **GET** `/api/auth/csrf`: Get CSRF token
+- **POST** `/api/auth/signout`: Sign out the current user
 
 #### **Properties API**
 
