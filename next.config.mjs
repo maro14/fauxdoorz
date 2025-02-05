@@ -11,10 +11,17 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+        port: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+        port: '',
+      }
     ],
-    domains: ['res.cloudinary.com'],
   },
 
   webpack: (config) => {
