@@ -2,16 +2,26 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import StatusBadge from './common/StatusBadge';
+import { FaCircle } from 'react-icons/fa';
 
 export default function PropertyCard({ property }) {
-  const { title, location, price, status = 'available', imageUrl } = property || {};
+  const {
+    _id,
+    title,
+    location,
+    pricePerNight,
+    images,
+    status = 'available'
+  } = property;
+
+  // Use the first image or a placeholder
+  const imageUrl = images?.[0] || '/images/placeholder.jpg';
 
   const handleBooking = async () => {
     const res = await fetch('/api/bookings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ propertyId: property._id }),
+      body: JSON.stringify({ propertyId: _id }),
     });
 
     if (res.ok) {
@@ -25,30 +35,33 @@ export default function PropertyCard({ property }) {
   const isBooked = status?.toLowerCase?.() === 'booked';
 
   return (
-    <Link href={`/properties/${property._id}`} passHref>
+    <Link href={`/properties/${_id}`} passHref>
       <div className="relative border p-4 rounded-lg shadow-lg bg-white transition hover:shadow-xl flex flex-col cursor-pointer">
         {/* Image Container with Status Badge */}
         <div className="relative">
           <Image
-            src={imageUrl || '/images/placeholder.jpg'} // Update this path
-            alt={title || 'Property'}
+            src={imageUrl}
+            alt={title}
             width={500}
             height={300}
             className="w-full h-48 object-cover rounded-lg transition-transform transform hover:scale-105"
-            priority // Add this for important images
+            priority
           />
           {/* Status Badge Overlay */}
           <div className="absolute top-4 right-4">
-            <StatusBadge status={status || 'available'} />
+            <span className="bg-green-500 px-3 py-1 text-sm font-bold rounded-full text-white flex items-center gap-2">
+              <FaCircle className="w-2 h-2" />
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </span>
           </div>
         </div>
 
         {/* Property Details */}
         <div className="flex-grow text-center mt-4">
-          <h2 className="text-2xl font-bold text-gray-800">{title || 'Untitled Property'}</h2>
-          <p className="text-gray-600">{location || 'Location not specified'}</p>
+          <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+          <p className="text-gray-600">{location}</p>
           <p className="text-lg font-semibold text-green-600 mt-2">
-            ${price || 0} per night
+            ${pricePerNight.toLocaleString()} per night
           </p>
         </div>
 

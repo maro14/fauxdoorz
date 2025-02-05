@@ -5,16 +5,29 @@ import authMiddleware from '../../../middlewares/authMiddleware';
 export default async function handler(req, res) {
   await dbConnect();
 
-  if (req.method === 'GET') {
-    try {
-      const properties = await Property.find();
-      res.status(200).json(properties);
-    } catch (error) {
-      res.status(500).json({ message: 'Error fetching properties', error: error.message });
+  try {
+    switch (req.method) {
+      case 'GET':
+        const properties = await Property.find({})
+          .sort({ createdAt: -1 })
+          .limit(6);
+
+        // Format the price and ensure images are present
+        const formattedProperties = properties.map(property => ({
+          ...property.toObject(),
+          pricePerNight: Number(property.pricePerNight),
+          images: property.images.length ? property.images : ['/images/placeholder.jpg']
+        }));
+
+        res.status(200).json(formattedProperties);
+        break;
+
+      default:
+        res.status(405).json({ message: 'Method not allowed' });
     }
-  } 
-  else {
-    res.status(405).json({ message: `Method ${req.method} Not Allowed` });
+  } catch (error) {
+    console.error('Properties API error:', error);
+    res.status(500).json({ message: 'Error fetching properties' });
   }
 
   if (req.method === 'POST') {

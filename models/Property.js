@@ -22,11 +22,17 @@ const PropertySchema = new mongoose.Schema({
   },
   images: [{
     type: String,
+    required: [true, 'At least one image is required'],
   }],
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
+  },
+  status: {
+    type: String,
+    enum: ['available', 'booked', 'maintenance'],
+    default: 'available'
   },
   createdAt: {
     type: Date,

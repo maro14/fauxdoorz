@@ -59,21 +59,26 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
     const formData = new FormData();
     formData.append('file', file);
 
+    setIsLoading(true);
     try {
       const res = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
+      if (!res.ok) {
+        throw new Error('Failed to upload image');
+      }
 
+      const data = await res.json();
       setFormData(prev => ({
         ...prev,
         images: [...prev.images, data.url]
       }));
     } catch (error) {
-      setError('Failed to upload image');
+      setError('Failed to upload image: ' + error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
