@@ -1,11 +1,13 @@
 // components/SearchBox.js
 import { useState } from 'react';
+import { FiSearch, FiMapPin, FiDollarSign } from 'react-icons/fi';
 
 export default function SearchBox({ onSearch }) {
   const [location, setLocation] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [error, setError] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -38,61 +40,89 @@ export default function SearchBox({ onSearch }) {
   };
 
   return (
-    <form onSubmit={handleSearch} className="bg-gray-200 p-4 rounded-lg shadow-md mb-9">
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      
-      <div className="flex flex-col md:flex-row md:space-x-4 items-center">
-        {/* Location Input */}
-        <div className="w-full md:w-1/3 mb-2 md:mb-0">
-          <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="w-full p-2 border rounded-md text-sm"
-            placeholder="Location"
-            aria-label="Search by location"
-          />
+    <div className="max-w-2xl mx-auto px-4">
+      <form onSubmit={handleSearch} className="relative">
+        {/* Main Search Container */}
+        <div className={`bg-white rounded-3xl shadow-md transition-all duration-300 ${isExpanded ? 'rounded-2xl' : ''}`}>
+          {/* Collapsed View */}
+          {!isExpanded && (
+            <div 
+              onClick={() => setIsExpanded(true)}
+              className="flex items-center p-3 cursor-pointer"
+            >
+              <div className="flex items-center flex-1 px-4">
+                <FiSearch className="h-5 w-5 text-gray-400 mr-3" />
+                <span className="text-gray-400">Search properties...</span>
+              </div>
+            </div>
+          )}
+
+          {/* Expanded View */}
+          {isExpanded && (
+            <div className="p-4 space-y-4">
+              {/* Location Input */}
+              <div className="relative">
+                <div className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                  <FiMapPin className="h-5 w-5" />
+                </div>
+                <input
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 border-0 focus:ring-0 rounded-full bg-gray-50"
+                  placeholder="Where to?"
+                />
+              </div>
+
+              {/* Price Range */}
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <div className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                    <FiDollarSign className="h-5 w-5" />
+                  </div>
+                  <input
+                    type="number"
+                    min="0"
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value.replace(/[^0-9]/g, ''))}
+                    className="w-full pl-10 pr-4 py-2.5 border-0 focus:ring-0 rounded-full bg-gray-50"
+                    placeholder="Min price"
+                  />
+                </div>
+                <div className="relative flex-1">
+                  <div className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                    <FiDollarSign className="h-5 w-5" />
+                  </div>
+                  <input
+                    type="number"
+                    min="0"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value.replace(/[^0-9]/g, ''))}
+                    className="w-full pl-10 pr-4 py-2.5 border-0 focus:ring-0 rounded-full bg-gray-50"
+                    placeholder="Max price"
+                  />
+                </div>
+              </div>
+
+              {/* Search Button */}
+              <button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full py-2.5 transition-colors duration-200 flex items-center justify-center gap-2"
+              >
+                <FiSearch className="h-5 w-5" />
+                <span>Search</span>
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Min Price Input */}
-        <div className="w-full md:w-1/3 mb-2 md:mb-0">
-          <input
-            type="number"
-            min="0"
-            step="1"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value.replace(/[^0-9]/g, ''))}
-            className="w-full p-2 border rounded-md text-sm"
-            placeholder="Min Price"
-            aria-label="Minimum price"
-          />
-        </div>
-
-        {/* Max Price Input */}
-        <div className="w-full md:w-1/3 mb-2 md:mb-0">
-          <input
-            type="number"
-            min="0"
-            step="1"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value.replace(/[^0-9]/g, ''))}
-            className="w-full p-2 border rounded-md text-sm"
-            placeholder="Max Price"
-            aria-label="Maximum price"
-          />
-        </div>
-
-        {/* Search Button */}
-        <div className="w-full md:w-auto mt-2 md:mt-0">
-          <button
-            type="submit"
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-md w-full md:w-auto text-sm transition-colors duration-200"
-            aria-label="Search properties"
-          >
-            Search
-          </button>
-        </div>
-      </div>
-    </form>
+        {/* Error Message */}
+        {error && (
+          <div className="absolute -bottom-8 left-0 right-0 text-center">
+            <p className="text-sm text-red-500">{error}</p>
+          </div>
+        )}
+      </form>
+    </div>
   );
 }
