@@ -5,59 +5,86 @@ import Image from 'next/image';
 
 export default function PropertyForm({ onPropertyAdded, initialData }) {
   const { data: session } = useSession();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     title: initialData?.title || '',
     description: initialData?.description || '',
     location: initialData?.location || '',
-    price: initialData?.price || '',
+    pricePerNight: initialData?.pricePerNight || '',
     images: initialData?.images || [],
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setIsLoading(true);
+    setError('');
 
     try {
-      const res = await fetch('/api/properties', {
-        method: initialData ? 'PUT' : 'POST',
+      const res = await fetch('/api/properties/create', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.accessToken}`,
         },
-        body: JSON.stringify({
-          ...formData,
-          _id: initialData?._id,
-        }),
+        body: JSON.stringify(formData),
       });
 
-      if (!res.ok) throw new Error('Failed to save property');
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to save property');
+      }
 
       setFormData({
         title: '',
         description: '',
         location: '',
-        price: '',
+        pricePerNight: '',
         images: [],
       });
-
       onPropertyAdded();
     } catch (error) {
-      console.error('Error saving property:', error);
-      alert('Failed to save property');
+      console.error('Submit error:', error);
+      setError(error.message);
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
-  const handleImageUpload = (imageUrl) => {
-    setFormData(prev => ({
-      ...prev,
-      images: [...prev.images, imageUrl],
-    }));
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      setFormData(prev => ({
+        ...prev,
+        images: [...prev.images, data.url]
+      }));
+    } catch (error) {
+      setError('Failed to upload image');
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-400 p-4">
+          <p className="text-red-700">{error}</p>
+        </div>
+      )}
+      
       <h2 className="text-xl font-bold mb-6">
         {initialData ? 'Edit Property' : 'Add New Property'}
       </h2>
@@ -100,15 +127,20 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
           <label className="block text-sm font-medium text-gray-700">Price per night</label>
           <input
             type="number"
-            value={formData.price}
-            onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
+            value={formData.pricePerNight}
+            onChange={(e) => setFormData(prev => ({ ...prev, pricePerNight: e.target.value }))}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             required
             min="0"
           />
         </div>
 
-        <ImageUpload onImageUpload={handleImageUpload} />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="w-full p-2 border rounded"
+        />
 
         {/* Display uploaded images */}
         <div className="grid grid-cols-2 gap-2 mt-4">
@@ -138,17 +170,17 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
             </div>
           ))}
         </div>
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-            isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
-        >
-          {isSubmitting ? 'Saving...' : initialData ? 'Update Property' : 'Add Property'}
-        </button>
       </div>
+
+      <button
+        type="submit"
+        disabled={isLoading}
+        className={`w-full bg-blue-600 text-white p-2 rounded ${
+          isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+        }`}
+      >
+        {isLoading ? 'Saving...' : initialData ? 'Update Property' : 'Add Property'}
+      </button>
     </form>
   );
 } 

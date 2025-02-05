@@ -4,7 +4,7 @@ import dbConnect from '../../../utils/dbConnect'; // Your database connection
 import User from '../../../models/User'; // Your user model
 import bcrypt from 'bcrypt';
 
-export default NextAuth({
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -89,4 +89,6 @@ export default NextAuth({
   },
   debug: process.env.NODE_ENV === 'development',
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+export default NextAuth(authOptions);

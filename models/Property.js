@@ -3,29 +3,26 @@ import mongoose from 'mongoose';
 const PropertySchema = new mongoose.Schema({
   title: {
     type: String,
-    required: [true, 'Please provide the title of the property'],
+    required: [true, 'Please provide a title'],
+    trim: true,
   },
   description: {
     type: String,
-    required: [true, 'Please provide a description for the property'],
+    trim: true,
   },
   location: {
     type: String,
-    required: [true, 'Please provide the location of the property'],
-    index: true, // ✅ Faster search queries
+    required: [true, 'Please provide a location'],
+    trim: true,
   },
-  available: {
-    type: Boolean,
-    default: true
-  },
-  price: {
+  pricePerNight: {
     type: Number,
-    required: [true, 'Please provide the price per night'],
+    required: [true, 'Please provide a price'],
+    min: [0, 'Price cannot be negative'],
   },
-  images: {
-    type: [String], // ✅ Array of image URLs
-    required: true,
-  },
+  images: [{
+    type: String,
+  }],
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -35,13 +32,10 @@ const PropertySchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
 });
 
-// Index for search optimization
-PropertySchema.index({ location: 'text' });
+// Add indexes for better query performance
+PropertySchema.index({ location: 1 });
+PropertySchema.index({ owner: 1 });
 
 export default mongoose.models.Property || mongoose.model('Property', PropertySchema);
