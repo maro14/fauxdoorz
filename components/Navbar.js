@@ -25,24 +25,28 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           {/* Logo Section */}
           <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <Image src="/house logo.png" alt="Logo" width={40} height={40} className="rounded-lg" />
-              <span className="text-xl font-bold text-gray-800">fauxDoorz</span>
+            <Link href="/" passHref>
+              <div className="flex items-center space-x-2">
+                <Image src="/house logo.png" alt="Logo" width={40} height={40} className="rounded-lg" />
+                <span className="text-xl font-bold text-gray-800">fauxDoorz</span>
+              </div>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/properties" 
-              className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
-              Browse Properties
+            <Link href="/properties" passHref>
+              <div className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
+                Browse Properties
+              </div>
             </Link>
 
             {user ? (
               <>
-                <Link href="/dashboard" 
-                  className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium">
-                  Dashboard
+                <Link href="/dashboard" passHref>
+                  <div className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+                    Dashboard
+                  </div>
                 </Link>
                 
                 {/* User Menu */}
@@ -62,13 +66,15 @@ export default function Navbar() {
               </>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link href="/login"
-                  className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium">
-                  Login
+                <Link href="/login" passHref>
+                  <div className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+                    Login
+                  </div>
                 </Link>
-                <Link href="/signup"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                  Sign Up
+                <Link href="/auth/signin" passHref>
+                  <div className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                    Sign In
+                  </div>
                 </Link>
               </div>
             )}
@@ -110,16 +116,18 @@ export default function Navbar() {
       {/* Mobile menu */}
       <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden bg-white border-t`}>
         <div className="px-2 pt-2 pb-3 space-y-1">
-          <Link href="/properties"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-            Browse Properties
+          <Link href="/properties" passHref>
+            <div className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+              Browse Properties
+            </div>
           </Link>
 
           {user ? (
             <>
-              <Link href="/dashboard"
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                Dashboard
+              <Link href="/dashboard" passHref>
+                <div className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                  Dashboard
+                </div>
               </Link>
               <button
                 onClick={logout}
@@ -130,13 +138,15 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/login"
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                Login
+              <Link href="/login" passHref>
+                <div className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                  Login
+                </div>
               </Link>
-              <Link href="/signup"
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                Sign Up
+              <Link href="/signin" passHref>
+                <div className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                  Sign In
+                </div>
               </Link>
             </>
           )}

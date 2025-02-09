@@ -12,44 +12,31 @@ export const authOptions = {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         try {
           await dbConnect();
 
-          // Check if credentials exist
+          if (!req?.body?.csrfToken) {
+            throw new Error('CSRF token missing');
+          }
+
           if (!credentials?.email || !credentials?.password) {
             throw new Error('Please provide both email and password');
           }
 
-          // Find user and explicitly select password field
-          const user = await User.findOne({ email: credentials.email }).select('+password');
+          const user = await User.findOne({ email: credentials.email.toLowerCase() }).select('+password');
           
           if (!user) {
-            throw new Error('No user found with this email');
+            throw new Error('Invalid email or password');
           }
 
-          // Debug log (remove in production)
-          console.log('Found user:', user.email);
-
-          // Ensure password exists
-          if (!user.password) {
-            throw new Error('User has no password set');
-          }
-
-          // Compare passwords
-          const isValid = await bcrypt.compare(
-            credentials.password,
-            user.password
-          );
-
-          // Debug log (remove in production)
-          console.log('Password valid:', isValid);
+          const isValid = await bcrypt.compare(credentials.password, user.password);
 
           if (!isValid) {
-            throw new Error('Invalid password');
+            throw new Error('Invalid email or password');
           }
 
-          // Return user without password
+          // Return user without sensitive data
           return {
             id: user._id.toString(),
             email: user.email,
@@ -57,8 +44,8 @@ export const authOptions = {
             role: user.role,
           };
         } catch (error) {
-          console.error('Auth error details:', error);
-          throw error;
+          console.error('Authentication error:', error);
+          throw new Error(error.message);
         }
       },
     }),
@@ -69,7 +56,7 @@ export const authOptions = {
   },
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 24 * 60 * 60, // 24 hours
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -87,8 +74,8 @@ export const authOptions = {
       return session;
     },
   },
-  debug: process.env.NODE_ENV === 'development',
   secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === 'development',
 };
 
 export default NextAuth(authOptions);

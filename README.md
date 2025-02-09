@@ -105,10 +105,10 @@ fauxdoorz/
 ### API Routes
 
 #### Authentication
-- `POST /api/auth/signup`: Create new user account
-- `POST /api/auth/signin`: Sign in with credentials
+- `GET/POST /api/auth/signin`: NextAuth.js signin
+- `GET/POST /api/auth/signout`: NextAuth.js signout
 - `GET /api/auth/session`: Get current session
-- `POST /api/auth/signout`: Sign out user
+- `GET /api/auth/csrf`: Get CSRF token
 
 #### Properties
 - `GET /api/properties`: List all properties
@@ -185,3 +185,5 @@ This project is licensed under the MIT License.
 - [MongoDB Atlas](https://www.mongodb.com/atlas)
 - [TailwindCSS](https://tailwindcss.com)
 - [React Icons](https://react-icons.github.io/react-icons)
+
+> Note: Authentication is handled through NextAuth.js. Direct API endpoints for signin/signup are not used.

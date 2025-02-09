@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
@@ -9,11 +9,24 @@ export default function SignIn() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { data: session } = useSession();
+
+  // Redirect if already authenticated
+  if (session) {
+    router.push('/');
+    return null;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+
+    if (!email || !password) {
+      setError('Please fill in all fields');
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const result = await signIn('credentials', {
@@ -22,18 +35,29 @@ export default function SignIn() {
         password,
       });
 
+      console.log('Sign in result:', result); // Debug log
+
       if (result?.error) {
         setError(result.error);
       } else {
-        // Redirect to the intended page or dashboard
-        const callbackUrl = router.query.callbackUrl || '/dashboard';
-        router.push(callbackUrl);
+        const targetUrl = router.query.callbackUrl || '/';
+        if (router.pathname !== targetUrl) {
+          router.replace(targetUrl);
+        }
       }
     } catch (error) {
       console.error('Sign in error:', error);
       setError('An unexpected error occurred');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Prevent navigation loop
+  const handleSignupClick = (e) => {
+    e.preventDefault();
+    if (router.pathname !== '/auth/signin') {
+      router.replace('/auth/signin');
     }
   };
 
@@ -46,15 +70,18 @@ export default function SignIn() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
-            <Link href="/auth/signup" className="font-medium text-blue-600 hover:text-blue-500">
+            <button 
+              onClick={handleSignupClick}
+              className="font-medium text-green-600 hover:text-green-500"
+            >
               create a new account
-            </Link>
+            </button>
           </p>
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+            <div className="bg-red-50 border-l-4 border-red-400 p-4">
               <p className="text-red-700">{error}</p>
             </div>
           )}
@@ -68,8 +95,9 @@ export default function SignIn() {
                 id="email"
                 name="email"
                 type="email"
+                autoComplete="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -83,8 +111,9 @@ export default function SignIn() {
                 id="password"
                 name="password"
                 type="password"
+                autoComplete="current-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -96,7 +125,7 @@ export default function SignIn() {
             <button
               type="submit"
               disabled={isLoading}
-              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
@@ -104,7 +133,23 @@ export default function SignIn() {
             </button>
           </div>
         </form>
+
+        {/* Debug info - remove in production */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="mt-4 text-xs text-gray-500">
+            <p>Debug Info:</p>
+            <p>Current route: {router.pathname}</p>
+            <p>Query params: {JSON.stringify(router.query)}</p>
+          </div>
+        )}
       </div>
     </div>
   );
-} 
+}
+
+// Add getServerSideProps to ensure page is always server-side rendered
+export async function getServerSideProps(context) {
+  return {
+    props: {}, // will be passed to the page component as props
+  };
+}

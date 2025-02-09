@@ -6,34 +6,33 @@ import SearchBox from '../components/SearchBox';
 export default function Home() {
   const [properties, setProperties] = useState([]);
   const [featuredProperties, setFeaturedProperties] = useState([]);
-  const [loading, setLoading] = useState(false); // 🔄 Initially false to prevent unnecessary "loading"
+  const [loading, setLoading] = useState(true); // Start with true
   const [error, setError] = useState(null);
   const [searchPerformed, setSearchPerformed] = useState(false); // 🔄 Tracks whether search was performed
 
   useEffect(() => {
-    const fetchFeaturedProperties = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch('/api/properties');
-        if (!res.ok) {
-          throw new Error('Failed to fetch properties');
-        }
-        const data = await res.json();
-
-        if (data && data.length > 0) {
-          setFeaturedProperties(data.slice(0, 6)); // Show only 6 featured properties
-        } else {
-          setError('No featured properties found.');
-        }
-      } catch (err) {
-        setError(err.message || 'An unexpected error occurred.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchFeaturedProperties();
   }, []);
+
+  const fetchFeaturedProperties = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/properties');
+      if (!res.ok) throw new Error('Failed to fetch properties');
+      
+      const data = await res.json();
+      setFeaturedProperties(data.slice(0, 6));
+      
+      if (!data.length) {
+        setError('No featured properties found.');
+      }
+    } catch (err) {
+      console.error('Fetch error:', err);
+      setError(err.message || 'An unexpected error occurred.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSearch = async (searchCriteria) => {
     setLoading(true);
