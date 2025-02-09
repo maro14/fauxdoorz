@@ -1,24 +1,23 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please provide your name'],
+    required: [true, 'Please provide a name'],
+    trim: true,
   },
   email: {
     type: String,
-    required: [true, 'Please provide your email'],
+    required: [true, 'Please provide an email'],
     unique: true,
-    lowercase: true,
     trim: true,
-    match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email'],
+    lowercase: true,
   },
   password: {
     type: String,
     required: [true, 'Please provide a password'],
-    minlength: [8, 'Password should be at least 8 characters long'],
-    select: false, // Don't include password by default in queries
+    minlength: [6, 'Password should be at least 6 characters'],
   },
   role: {
     type: String,
@@ -35,8 +34,8 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-// Add password hashing middleware
-UserSchema.pre('save', async function(next) {
+// Hash password before saving
+userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     return next();
   }
@@ -50,8 +49,8 @@ UserSchema.pre('save', async function(next) {
   }
 });
 
-// Add method to check password
-UserSchema.methods.comparePassword = async function(candidatePassword) {
+// Method to check password
+userSchema.methods.comparePassword = async function(candidatePassword) {
   try {
     return await bcrypt.compare(candidatePassword, this.password);
   } catch (error) {
@@ -59,7 +58,16 @@ UserSchema.methods.comparePassword = async function(candidatePassword) {
   }
 };
 
-// Add indexes
-UserSchema.index({ email: 1 });
+// Remove password when converting to JSON
+userSchema.set('toJSON', {
+  transform: function(doc, ret) {
+    delete ret.password;
+    return ret;
+  }
+});
 
-export default mongoose.models.User || mongoose.model('User', UserSchema);
+// Prevent duplicate email index
+userSchema.index({ email: 1 }, { unique: true });
+
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+export default User;

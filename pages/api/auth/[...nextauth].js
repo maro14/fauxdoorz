@@ -1,62 +1,47 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import dbConnect from '../../../utils/dbConnect'; // Your database connection
-import User from '../../../models/User'; // Your user model
-import bcrypt from 'bcrypt';
+import dbConnect from '@/utils/dbConnect';
+import User from '@/models/User';
 
 export const authOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         try {
           await dbConnect();
-
-          if (!req?.body?.csrfToken) {
-            throw new Error('CSRF token missing');
-          }
-
-          if (!credentials?.email || !credentials?.password) {
-            throw new Error('Please provide both email and password');
-          }
-
-          const user = await User.findOne({ email: credentials.email.toLowerCase() }).select('+password');
           
+          const user = await User.findOne({ email: credentials.email }).select('+password');
           if (!user) {
-            throw new Error('Invalid email or password');
+            throw new Error('No user found with this email');
           }
 
-          const isValid = await bcrypt.compare(credentials.password, user.password);
-
+          const isValid = await user.comparePassword(credentials.password);
           if (!isValid) {
-            throw new Error('Invalid email or password');
+            throw new Error('Invalid password');
           }
 
-          // Return user without sensitive data
           return {
             id: user._id.toString(),
             email: user.email,
             name: user.name,
-            role: user.role,
+            role: user.role
           };
         } catch (error) {
-          console.error('Authentication error:', error);
-          throw new Error(error.message);
+          console.error('Auth error:', error);
+          return null;
         }
-      },
-    }),
+      }
+    })
   ],
   pages: {
     signIn: '/auth/signin',
+    signUp: '/auth/signup',
     error: '/auth/error',
-  },
-  session: {
-    strategy: 'jwt',
-    maxAge: 24 * 60 * 60, // 24 hours
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -72,10 +57,13 @@ export const authOptions = {
         session.user.role = token.role;
       }
       return session;
-    },
+    }
+  },
+  debug: process.env.NODE_ENV === 'development',
+  session: {
+    strategy: 'jwt',
   },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === 'development',
 };
 
-export default NextAuth(authOptions);
+export default NextAuth(authOptions); 
