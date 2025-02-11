@@ -1,8 +1,7 @@
-// components/PropertyCard.js (Enhanced UI & Image Optimization)
-
+// components/PropertyCard.js
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaCircle } from 'react-icons/fa';
+import { FaCircle, FaMapMarkerAlt, FaDollarSign, FaCalendarCheck } from 'react-icons/fa';
 
 export default function PropertyCard({ property }) {
   const {
@@ -23,9 +22,8 @@ export default function PropertyCard({ property }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ propertyId: _id }),
     });
-
     if (res.ok) {
-      // Handle successful booking
+      alert('Booking successful!');
     } else {
       alert('Booking failed!');
     }
@@ -38,7 +36,7 @@ export default function PropertyCard({ property }) {
     <Link href={`/properties/${_id}`} passHref>
       <div className="relative border p-4 rounded-lg shadow-lg bg-white transition hover:shadow-2xl flex flex-col cursor-pointer">
         {/* Image Container with Status Badge */}
-        <div className="relative">
+        <div className="relative overflow-hidden rounded-lg">
           <Image
             src={imageUrl}
             alt={title}
@@ -50,35 +48,53 @@ export default function PropertyCard({ property }) {
             priority
           />
           {/* Status Badge Overlay */}
-          <div className="absolute top-4 right-4">
-            <span className="bg-green-500 px-3 py-1 text-sm font-bold rounded-full text-white flex items-center gap-2">
+          <div className="absolute top-3 right-3">
+            <span
+              className={`px-3 py-1 text-xs font-bold rounded-full flex items-center gap-1 ${
+                isBooked ? 'bg-red-500' : 'bg-green-500'
+              } text-white`}
+            >
               <FaCircle className="w-2 h-2" />
-              {status.charAt(0).toUpperCase() + status.slice(1)}
+              {isBooked ? 'Booked' : 'Available'}
             </span>
           </div>
         </div>
 
         {/* Property Details */}
-        <div className="flex-grow text-center mt-4">
-          <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
-          <p className="text-gray-600">{location}</p>
-          <p className="text-lg font-semibold text-green-600 mt-2">
-            ${pricePerNight.toLocaleString()} per night
-          </p>
+        <div className="flex-grow mt-4">
+          <h2 className="text-xl font-bold text-gray-800 line-clamp-1">{title}</h2>
+          <div className="flex items-center justify-center text-gray-600 mt-2">
+            <FaMapMarkerAlt className="mr-1 text-red-500" />
+            <p className="text-sm">{location}</p>
+          </div>
+          <div className="flex items-center justify-center text-green-600 mt-2">
+            <FaDollarSign className="mr-1" />
+            <p className="text-lg font-semibold">${pricePerNight.toLocaleString()} per night</p>
+          </div>
         </div>
 
         {/* Booking Button */}
         <div className="mt-4 mb-2 text-center">
-          <button 
-            className={`py-2 px-6 rounded-md transition ${
-              isBooked 
-                ? 'bg-gray-400 cursor-not-allowed' 
+          <button
+            className={`py-2 px-6 rounded-md transition w-full ${
+              isBooked
+                ? 'bg-gray-400 cursor-not-allowed'
                 : 'bg-blue-500 hover:bg-blue-600'
-            } text-white`}
+            } text-white flex items-center justify-center gap-2`}
             disabled={isBooked}
             onClick={handleBooking}
           >
-            {isBooked ? 'Not Available' : 'Book Now'}
+            {isBooked ? (
+              <>
+                <FaCircle className="w-3 h-3 text-red-500" />
+                Not Available
+              </>
+            ) : (
+              <>
+                <FaCalendarCheck className="w-4 h-4" />
+                Book Now
+              </>
+            )}
           </button>
         </div>
       </div>

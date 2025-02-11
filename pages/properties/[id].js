@@ -2,6 +2,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { FaMapMarkerAlt, FaDollarSign, FaCalendarCheck } from 'react-icons/fa';
 
 export default function PropertyDetails() {
   const router = useRouter();
@@ -17,11 +18,9 @@ export default function PropertyDetails() {
       try {
         const res = await fetch(`/api/properties/${id}`);
         const data = await res.json();
-
         if (!res.ok) {
           throw new Error(data.message || 'Failed to load property details');
         }
-
         setProperty(data);
       } catch (error) {
         setError(error.message);
@@ -34,15 +33,39 @@ export default function PropertyDetails() {
   }, [id]);
 
   if (loading) {
-    return <div className="text-center text-lg font-semibold mt-10 animate-pulse">Loading property details...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen text-lg font-semibold animate-pulse">
+        Loading property details...
+      </div>
+    );
   }
 
   if (error) {
-    return <p className="text-center mt-10 text-red-500">Error: {error}</p>;
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen text-red-500">
+        <p className="text-xl">Error: {error}</p>
+        <button
+          onClick={() => router.push('/')}
+          className="mt-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition"
+        >
+          Go Back
+        </button>
+      </div>
+    );
   }
 
   if (!property) {
-    return <p className="text-center mt-10">No property found.</p>;
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen text-gray-700">
+        <p className="text-xl">No property found.</p>
+        <button
+          onClick={() => router.push('/')}
+          className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition"
+        >
+          Explore Properties
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -57,7 +80,7 @@ export default function PropertyDetails() {
               alt={property.title}
               width={800}
               height={500}
-              className="w-full h-80 object-cover rounded-lg shadow-md hover:shadow-lg transition"
+              className="w-full h-80 object-cover rounded-lg shadow-md hover:shadow-lg transition duration-300"
             />
           ))}
         </div>
@@ -67,14 +90,19 @@ export default function PropertyDetails() {
           <div>
             <h1 className="text-4xl font-bold mb-4">{property.title}</h1>
             <p className="text-gray-700 text-lg mb-4">{property.description}</p>
-            <p className="text-green-500 text-2xl font-bold mb-4">
-              ${property.pricePerNight?.toLocaleString()} / night
-            </p>
-            <p className="text-gray-600">📍 {property.location}</p>
+            <div className="flex items-center text-green-500 text-2xl font-bold mb-4">
+              <FaDollarSign className="mr-2" />
+              {property.pricePerNight?.toLocaleString()} / night
+            </div>
+            <div className="flex items-center text-gray-600 mb-4">
+              <FaMapMarkerAlt className="mr-2 text-red-500" />
+              {property.location}
+            </div>
           </div>
-          
+
           {/* Booking Button */}
-          <button className="mt-6 bg-green-500 text-white py-3 px-6 rounded-md text-lg font-semibold hover:bg-green-600 transition">
+          <button className="mt-6 bg-green-500 text-white py-3 px-6 rounded-md text-lg font-semibold flex items-center justify-center hover:bg-green-600 transition duration-300">
+            <FaCalendarCheck className="mr-2" />
             Book Now
           </button>
         </div>

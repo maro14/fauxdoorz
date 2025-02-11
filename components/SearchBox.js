@@ -1,43 +1,21 @@
 // components/SearchBox.js
 import { useState } from 'react';
 import { FiSearch, FiMapPin, FiDollarSign } from 'react-icons/fi';
+import useSearch from '../hooks/useSearch';
 
 export default function SearchBox({ onSearch }) {
-  const [location, setLocation] = useState('');
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const [error, setError] = useState(null);
+  const {
+    location,
+    setLocation,
+    minPrice,
+    setMinPrice,
+    maxPrice,
+    setMaxPrice,
+    error,
+    handleSearch,
+  } = useSearch(onSearch);
+
   const [isExpanded, setIsExpanded] = useState(false);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-
-    // Reset previous errors
-    setError(null);
-
-    // Validate price inputs
-    const min = Number(minPrice);
-    const max = Number(maxPrice);
-
-    if (minPrice && maxPrice && min > max) {
-      setError('Minimum price cannot be greater than maximum price');
-      return;
-    }
-
-    if ((minPrice && min < 0) || (maxPrice && max < 0)) {
-      setError('Price values cannot be negative');
-      return;
-    }
-
-    // Build search criteria
-    const searchCriteria = {
-      location: location.trim(),
-      priceRange: minPrice && maxPrice ? [min, max] : undefined, // Ensuring priceRange is an array
-    };
-
-    // Trigger search with validated criteria
-    onSearch(searchCriteria);
-  };
 
   return (
     <div className="max-w-2xl mx-auto px-4">

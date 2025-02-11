@@ -1,6 +1,7 @@
-//pages/properties/index.js
+// pages/properties/index.js
 import { useEffect, useState } from 'react';
 import PropertyCard from '../../components/PropertyCard';
+import { FaHome, FaExclamationCircle, FaSpinner } from 'react-icons/fa';
 
 export default function PropertyList() {
   const [properties, setProperties] = useState([]);
@@ -12,11 +13,9 @@ export default function PropertyList() {
       try {
         const res = await fetch('/api/properties');
         const data = await res.json();
-
         if (!res.ok) {
           throw new Error(data.message || 'Failed to load properties');
         }
-
         setProperties(data);
       } catch (error) {
         setError(error.message);
@@ -24,22 +23,37 @@ export default function PropertyList() {
         setLoading(false);
       }
     }
-
     fetchProperties();
   }, []);
 
   if (loading) {
-    return <p className="text-center mt-10">Loading properties...</p>;
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen">
+        <FaSpinner className="animate-spin text-4xl text-blue-500 mb-4" />
+        <p className="text-lg font-semibold text-gray-700">Loading properties...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <p className="text-center mt-10 text-red-500">Error: {error}</p>;
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen text-red-500">
+        <FaExclamationCircle className="text-6xl mb-4" />
+        <p className="text-xl">Error: {error}</p>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto py-12">
-      <h1 className="text-3xl font-bold text-center mb-8">Available Properties</h1>
+    <div className="container mx-auto px-6 py-12">
+      {/* Header Section */}
+      <div className="flex flex-col items-center mb-12">
+        <FaHome className="text-4xl text-green-500 mb-4" />
+        <h1 className="text-3xl font-bold text-center text-gray-800">Available Properties</h1>
+        <p className="text-gray-600 mt-2">Explore our wide range of properties for your next stay.</p>
+      </div>
 
+      {/* Property Grid */}
       {properties.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {properties.map((property) => (
@@ -47,7 +61,10 @@ export default function PropertyList() {
           ))}
         </div>
       ) : (
-        <p className="text-center">No properties available.</p>
+        <div className="flex flex-col justify-center items-center min-h-[50vh] text-gray-700">
+          <FaHome className="text-6xl mb-4" />
+          <p className="text-xl">No properties available at the moment.</p>
+        </div>
       )}
     </div>
   );
