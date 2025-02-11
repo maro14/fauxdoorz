@@ -66,7 +66,7 @@ export default function SignIn() {
           </div>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-7" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             {/* Email Input */}
             <div>

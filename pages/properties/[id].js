@@ -1,4 +1,4 @@
-// pages/properties/[id].js (Enhanced Property Details Page)
+// pages/properties/[id].js
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -50,7 +50,7 @@ export default function PropertyDetails() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 my-10">
         {/* Property Image Gallery */}
         <div className="space-y-4">
-          {property.images.map((image, index) => (
+          {property.images?.map((image, index) => (
             <Image
               key={index}
               src={image}
@@ -67,12 +67,14 @@ export default function PropertyDetails() {
           <div>
             <h1 className="text-4xl font-bold mb-4">{property.title}</h1>
             <p className="text-gray-700 text-lg mb-4">{property.description}</p>
-            <p className="text-green-500 text-2xl font-bold mb-4">${property.price} / night</p>
+            <p className="text-green-500 text-2xl font-bold mb-4">
+              ${property.pricePerNight?.toLocaleString()} / night
+            </p>
             <p className="text-gray-600">📍 {property.location}</p>
           </div>
           
           {/* Booking Button */}
-          <button className="mt-6 bg-blue-500 text-white py-3 px-6 rounded-md text-lg font-semibold hover:bg-blue-600 transition">
+          <button className="mt-6 bg-green-500 text-white py-3 px-6 rounded-md text-lg font-semibold hover:bg-green-600 transition">
             Book Now
           </button>
         </div>

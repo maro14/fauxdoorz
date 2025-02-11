@@ -36,7 +36,7 @@ export default function PropertyCard({ property }) {
 
   return (
     <Link href={`/properties/${_id}`} passHref>
-      <div className="relative border p-4 rounded-lg shadow-lg bg-white transition hover:shadow-xl flex flex-col cursor-pointer">
+      <div className="relative border p-4 rounded-lg shadow-lg bg-white transition hover:shadow-2xl flex flex-col cursor-pointer">
         {/* Image Container with Status Badge */}
         <div className="relative">
           <Image
@@ -44,7 +44,9 @@ export default function PropertyCard({ property }) {
             alt={title}
             width={500}
             height={300}
-            className="w-full h-48 object-cover rounded-lg transition-transform transform hover:scale-105"
+            className="w-full h-48 object-cover rounded-lg"
+            placeholder="blur"
+            blurDataURL="/images/placeholder-blur.jpg"
             priority
           />
           {/* Status Badge Overlay */}
