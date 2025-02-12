@@ -9,10 +9,10 @@ export default async function handler(req, res) {
   try {
     await dbConnect();
 
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
 
     // Validate input
-    if (!name || !email || !password) {
+    if (!email || !password) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -24,7 +24,6 @@ export default async function handler(req, res) {
 
     // Create user
     const user = await User.create({
-      name,
       email,
       password // Password will be hashed by the model middleware
     });
@@ -33,7 +32,6 @@ export default async function handler(req, res) {
       success: true,
       user: {
         id: user._id.toString(),
-        name: user.name,
         email: user.email
       }
     });
@@ -41,4 +39,4 @@ export default async function handler(req, res) {
     console.error('Signup error:', error);
     res.status(500).json({ message: error.message });
   }
-} 
+}
