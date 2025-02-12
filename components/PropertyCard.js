@@ -69,7 +69,7 @@ export default function PropertyCard({ property }) {
           </div>
           <div className="flex items-center justify-center text-green-600 mt-2">
             <FaDollarSign className="mr-1" />
-            <p className="text-lg font-semibold">${pricePerNight.toLocaleString()} per night</p>
+            <p className="text-lg font-semibold">{pricePerNight.toLocaleString()} per night</p>
           </div>
         </div>
 

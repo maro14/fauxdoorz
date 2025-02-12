@@ -45,12 +45,12 @@ export default function PropertyList() {
   }
 
   return (
-    <div className="container mx-auto px-6 py-12">
+    <div className="container mx-auto px-8 py-10 m-10">
       {/* Header Section */}
-      <div className="flex flex-col items-center mb-12">
+      <div className="flex flex-col items-center mb-16">
         <FaHome className="text-4xl text-green-500 mb-4" />
-        <h1 className="text-3xl font-bold text-center text-gray-800">Available Properties</h1>
-        <p className="text-gray-600 mt-2">Explore our wide range of properties for your next stay.</p>
+        <h1 className="text-3xl font-bold text-center text--800">Available Properties</h1>
+        <p className="text-white-600 mt-2">Explore our wide range of properties for your next stay.</p>
       </div>
 
       {/* Property Grid */}

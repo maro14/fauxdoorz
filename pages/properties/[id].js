@@ -34,8 +34,12 @@ export default function PropertyDetails() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen text-lg font-semibold animate-pulse">
-        Loading property details...
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex flex-col items-center space-y-4">
+          {/* Spinner */}
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500"></div>
+          <p className="text-lg font-medium text-gray-700">Loading...</p>
+        </div>
       </div>
     );
   }

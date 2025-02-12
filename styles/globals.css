@@ -2,11 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* globals.css */
-
-body {
-    background-color: #e4b27e; /* This is the orange-300 color from Tailwind */
-    min-height: 100vh; /* Ensures it covers the full viewport */
-    margin: 0;
-    padding: 0;
+/* Define global styles in the `base` layer */
+@layer base {
+    body {
+        background: linear-gradient(to bottom right, #f97316, #f59e0b);
+        min-height: 100vh; /* Ensures it covers the full viewport */
+        margin: 0;
+        padding: 0;
+    }
 }
