@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { FaMapMarkerAlt, FaDollarSign, FaCalendarCheck, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { Button } from '@/components/ui/Button';
 
 export default function PropertyDetails() {
   const router = useRouter();
@@ -91,13 +92,14 @@ export default function PropertyDetails() {
   return (
     <div className="container mx-auto px-6 py-10 max-w-7xl">
       {/* Back button */}
-      <button 
-        onClick={() => router.back()} 
-        className="flex items-center text-gray-600 hover:text-blue-600 transition mb-6 group"
+      <Button
+        variant="ghost"
+        onClick={() => router.back()}
+        className="flex items-center gap-2 group mb-6"
       >
-        <FaArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" />
+        <FaArrowLeft className="group-hover:-translate-x-1 transition-transform" />
         Back to listings
-      </button>
+      </Button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 my-10">
         {/* Property Image Gallery - with enhanced styling */}
@@ -204,10 +206,14 @@ export default function PropertyDetails() {
           </div>
 
           {/* Booking Button - enhanced */}
-          <button className="w-full mt-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 px-6 rounded-xl text-lg font-semibold flex items-center justify-center hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1">
+          <Button
+            size="lg"
+            fullWidth
+            className="mt-6 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
+          >
             <FaCalendarCheck className="mr-3" />
             Book Now
-          </button>
+          </Button>
         </div>
       </div>
     </div>
