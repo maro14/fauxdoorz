@@ -2,7 +2,9 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { FaMapMarkerAlt, FaDollarSign, FaCalendarCheck, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaDollarSign, FaCalendarCheck, FaArrowLeft, FaArrowRight, 
+  FaBed, FaBath, FaUser, FaWifi, FaParking, FaSwimmingPool, FaDumbbell, 
+  FaSnowflake, FaTv, FaUtensils, FaWater, FaPaw, FaSmoking, FaCalendarAlt } from 'react-icons/fa';
 import { Button } from '@/components/ui/Button';
 
 export default function PropertyDetails() {
@@ -89,6 +91,21 @@ export default function PropertyDetails() {
     );
   }
 
+  // Helper function to render amenity icons
+  const renderAmenityIcon = (amenity) => {
+    switch(amenity) {
+      case 'wifi': return <FaWifi />;
+      case 'parking': return <FaParking />;
+      case 'pool': return <FaSwimmingPool />;
+      case 'gym': return <FaDumbbell />;
+      case 'ac': return <FaSnowflake />;
+      case 'tv': return <FaTv />;
+      case 'kitchen': return <FaUtensils />;
+      case 'waterfront': return <FaWater />;
+      default: return null;
+    }
+  };
+
   return (
     <div className="container mx-auto px-6 py-10 max-w-7xl">
       {/* Back button */}
@@ -174,9 +191,11 @@ export default function PropertyDetails() {
         {/* Property Details - enhanced */}
         <div className="flex flex-col justify-between bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
           <div>
-            <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4">
-              Vacation Home
-            </span>
+            {property.propertyType && (
+              <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4 capitalize">
+                {property.propertyType}
+              </span>
+            )}
             <h1 className="text-4xl font-bold mb-4 text-gray-900">{property.title}</h1>
             <p className="text-gray-700 text-lg mb-6 leading-relaxed">{property.description}</p>
             
@@ -193,16 +212,107 @@ export default function PropertyDetails() {
               </div>
             </div>
             
+            {/* Property Features */}
+            <div className="grid grid-cols-3 gap-4 mb-8 border-t border-b border-gray-100 py-6">
+              {property.bedrooms && (
+                <div className="flex flex-col items-center text-center p-3">
+                  <FaBed className="text-2xl text-gray-500 mb-2" />
+                  <span className="font-medium">{property.bedrooms}</span>
+                  <span className="text-sm text-gray-500">{property.bedrooms === 1 ? 'Bedroom' : 'Bedrooms'}</span>
+                </div>
+              )}
+              
+              {property.bathrooms && (
+                <div className="flex flex-col items-center text-center p-3">
+                  <FaBath className="text-2xl text-gray-500 mb-2" />
+                  <span className="font-medium">{property.bathrooms}</span>
+                  <span className="text-sm text-gray-500">{property.bathrooms === 1 ? 'Bathroom' : 'Bathrooms'}</span>
+                </div>
+              )}
+              
+              {property.maxGuests && (
+                <div className="flex flex-col items-center text-center p-3">
+                  <FaUser className="text-2xl text-gray-500 mb-2" />
+                  <span className="font-medium">{property.maxGuests}</span>
+                  <span className="text-sm text-gray-500">{property.maxGuests === 1 ? 'Guest' : 'Guests'}</span>
+                </div>
+              )}
+            </div>
+            
+            {/* Check-in/Check-out Times */}
             <div className="grid grid-cols-2 gap-4 mb-8">
               <div className="bg-gray-50 p-4 rounded-xl">
-                <h3 className="font-medium text-gray-900">Check-in</h3>
-                <p className="text-gray-600">After 3:00 PM</p>
+                <h3 className="font-medium text-gray-900 flex items-center">
+                  <FaCalendarAlt className="mr-2 text-gray-500" />
+                  Check-in
+                </h3>
+                <p className="text-gray-600">{property.checkInTime || 'After 3:00 PM'}</p>
               </div>
               <div className="bg-gray-50 p-4 rounded-xl">
-                <h3 className="font-medium text-gray-900">Check-out</h3>
-                <p className="text-gray-600">Before 11:00 AM</p>
+                <h3 className="font-medium text-gray-900 flex items-center">
+                  <FaCalendarAlt className="mr-2 text-gray-500" />
+                  Check-out
+                </h3>
+                <p className="text-gray-600">{property.checkOutTime || 'Before 11:00 AM'}</p>
               </div>
             </div>
+            
+            {/* Property Policies */}
+            {(property.petsAllowed !== undefined || property.smokingAllowed !== undefined) && (
+              <div className="mb-8">
+                <h3 className="font-semibold text-lg mb-3">House Rules</h3>
+                <div className="flex flex-wrap gap-4">
+                  {property.petsAllowed !== undefined && (
+                    <div className={`flex items-center gap-2 ${property.petsAllowed ? 'text-green-600' : 'text-red-500'}`}>
+                      <FaPaw />
+                      <span>{property.petsAllowed ? 'Pets allowed' : 'No pets'}</span>
+                    </div>
+                  )}
+                  {property.smokingAllowed !== undefined && (
+                    <div className={`flex items-center gap-2 ${property.smokingAllowed ? 'text-green-600' : 'text-red-500'}`}>
+                      <FaSmoking />
+                      <span>{property.smokingAllowed ? 'Smoking allowed' : 'No smoking'}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            {/* Amenities */}
+            {property.amenities && property.amenities.length > 0 && (
+              <div className="mb-8">
+                <h3 className="font-semibold text-lg mb-3">Amenities</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {property.amenities.map((amenity) => (
+                    <div key={amenity} className="flex items-center gap-2 text-gray-700">
+                      {renderAmenityIcon(amenity)}
+                      <span className="capitalize">{amenity.replace('-', ' ')}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Additional Property Details */}
+            {(property.squareFeet || property.yearBuilt) && (
+              <div className="mb-8">
+                <h3 className="font-semibold text-lg mb-3">Property Details</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {property.squareFeet && (
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <span className="font-medium">Size:</span>
+                      <span>{property.squareFeet} sq ft</span>
+                    </div>
+                  )}
+                  {property.yearBuilt && (
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <span className="font-medium">Year built:</span>
+                      <span>{property.yearBuilt}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Booking Button - enhanced */}

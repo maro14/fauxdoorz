@@ -20,54 +20,55 @@ export default function Navbar() {
   }, [router]);
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+    <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-lg border-b border-gray-100/20 font-inter">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-20">
           {/* Logo Section */}
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center space-x-3 group">
               <Image 
                 src="/faux.svg" 
                 alt="Logo" 
-                width={40} 
-                height={40} 
-                className="rounded-lg transition-transform group-hover:scale-105" 
+                width={45} 
+                height={45} 
+                className="rounded-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg" 
               />
-              <span className="text-xl font-bold bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
+              <span className="text-2xl font-extrabold bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 bg-clip-text text-transparent tracking-tight">
                 fauxDoorz
               </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-8">
             <Link 
               href="/properties"
-              className="text-gray-600 hover:text-orange-500 px-3 py-2 text-sm font-medium transition-colors"
+              className="text-gray-700 hover:text-orange-500 px-3 py-2 text-sm font-medium tracking-wide transition-all duration-200 hover:scale-105"
             >
               Browse Properties
             </Link>
 
             {status === 'loading' ? (
-              <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>
+              <div className="animate-pulse bg-gray-200 h-9 w-24 rounded-lg"></div>
             ) : session ? (
               <>
                 <Link 
                   href="/dashboard"
-                  className="text-gray-600 hover:text-orange-500 px-3 py-2 text-sm font-medium"
+                  className="text-gray-700 hover:text-orange-500 px-3 py-2 text-sm font-medium tracking-wide transition-all duration-200 hover:scale-105"
                 >
                   Dashboard
                 </Link>
                 
                 {/* User Menu */}
                 <div className="relative flex items-center space-x-4">
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium text-gray-700 tracking-wide">
                     {session.user.name || session.user.email}
                   </span>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={handleSignOut}
+                    className="shadow-sm hover:shadow-md transition-shadow duration-200"
                   >
                     Sign Out
                   </Button>
@@ -75,23 +76,32 @@ export default function Navbar() {
               </>
             ) : (
               <div className="flex items-center space-x-4">
-                <Button variant="ghost" size="sm" asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  asChild 
+                  className="hover:scale-105 transition-transform duration-200"
+                >
                   <Link href="/auth/signin">Sign In</Link>
                 </Button>
-                <Button size="sm" asChild>
+                <Button 
+                  size="sm" 
+                  asChild 
+                  className="shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105"
+                >
                   <Link href="/auth/signup">Sign Up</Link>
                 </Button>
               </div>
             )}
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu button - updated styling */}
           <div className="md:hidden flex items-center">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2"
+              className="p-2 hover:bg-orange-50"
               aria-expanded={isMenuOpen}
               aria-label="Toggle menu"
             >
@@ -116,9 +126,13 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden bg-white border-t`}>
-        <div className="px-4 py-3 space-y-2">
+      {/* Mobile menu - updated styling */}
+      <div 
+        className={`${
+          isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
+        } md:hidden bg-white/95 backdrop-blur-lg border-t border-gray-100/20 absolute w-full transition-all duration-300 ease-in-out transform`}
+      >
+        <div className="px-4 py-4 space-y-3">
           <Link 
             href="/properties"
             className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50"

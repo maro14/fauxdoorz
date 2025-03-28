@@ -2,15 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Define global styles in the `base` layer */
 @layer base {
-    body {
-        /* Modern subtle gradient background */
-        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-        min-height: 100vh; /* Ensures it covers the full viewport */
-        margin: 0;
-        padding: 0;
-    }
+  :root {
+    --font-sans: var(--font-plus-jakarta), var(--font-inter), system-ui, -apple-system;
+  }
+  
+  body {
+    @apply font-sans antialiased;
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-bold tracking-tight;
+  }
 }
 
 /* Additional modern styling elements */

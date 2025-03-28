@@ -18,10 +18,20 @@ export default async function handler(req, res) {
 
     await dbConnect();
 
-    const { title, description, location, pricePerNight, images } = req.body;
+    const { 
+      title, 
+      description, 
+      location, 
+      pricePerNight, 
+      images,
+      bedrooms,
+      bathrooms,
+      maxGuests,
+      amenities
+    } = req.body;
 
     // Validate required fields
-    if (!title || !location || !pricePerNight) {
+    if (!title || !location || !pricePerNight || !bedrooms || !bathrooms || !maxGuests) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -32,6 +42,10 @@ export default async function handler(req, res) {
       location,
       pricePerNight: Number(pricePerNight),
       images,
+      bedrooms: Number(bedrooms),
+      bathrooms: Number(bathrooms),
+      maxGuests: Number(maxGuests),
+      amenities: amenities || [],
       owner: session.user.id
     });
 
@@ -47,6 +61,6 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error('Create property error:', error);
-    res.status(500).json({ message: 'Failed to save property' });
+    res.status(500).json({ message: 'Failed to save property: ' + error.message });
   }
-} 
+}

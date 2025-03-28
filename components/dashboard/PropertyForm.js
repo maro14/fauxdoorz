@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import ImageUpload from '../ImageUpload';
 import Image from 'next/image';
+import { Button } from '@/components/ui/Button';
+import { FaUpload, FaTimes, FaSpinner, FaWifi, FaParking, FaSwimmingPool, FaDumbbell, FaSnowflake, FaTv, FaUtensils, FaWater } from 'react-icons/fa';
 
 export default function PropertyForm({ onPropertyAdded, initialData }) {
   const { data: session } = useSession();
@@ -13,6 +14,17 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
     location: initialData?.location || '',
     pricePerNight: initialData?.pricePerNight || '',
     images: initialData?.images || [],
+    bedrooms: initialData?.bedrooms || 1,
+    bathrooms: initialData?.bathrooms || 1,
+    maxGuests: initialData?.maxGuests || 1,
+    amenities: initialData?.amenities || [],
+    propertyType: initialData?.propertyType || 'apartment',
+    squareFeet: initialData?.squareFeet || '',
+    yearBuilt: initialData?.yearBuilt || '',
+    petsAllowed: initialData?.petsAllowed || false,
+    smokingAllowed: initialData?.smokingAllowed || false,
+    checkInTime: initialData?.checkInTime || '15:00',
+    checkOutTime: initialData?.checkOutTime || '11:00',
   });
 
   const handleSubmit = async (e) => {
@@ -82,110 +94,140 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
     }
   };
 
+  const amenityOptions = [
+    { id: 'wifi', label: 'WiFi', icon: <FaWifi /> },
+    { id: 'parking', label: 'Parking', icon: <FaParking /> },
+    { id: 'pool', label: 'Pool', icon: <FaSwimmingPool /> },
+    { id: 'gym', label: 'Gym', icon: <FaDumbbell /> },
+    { id: 'ac', label: 'Air Conditioning', icon: <FaSnowflake /> },
+    { id: 'tv', label: 'TV', icon: <FaTv /> },
+    { id: 'kitchen', label: 'Kitchen', icon: <FaUtensils /> },
+    { id: 'waterfront', label: 'Waterfront', icon: <FaWater /> },
+  ];
+
+  const propertyTypes = [
+    'apartment', 'house', 'condo', 'villa', 'cabin', 'cottage', 
+    'townhouse', 'loft', 'studio', 'hotel', 'resort', 'other'
+  ];
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-400 p-4">
-          <p className="text-red-700">{error}</p>
+        <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
+          <p className="text-red-700 font-medium">{error}</p>
         </div>
       )}
       
-      <h2 className="text-xl font-bold mb-6">
+      <h2 className="text-2xl font-bold text-gray-900">
         {initialData ? 'Edit Property' : 'Add New Property'}
       </h2>
 
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Title</label>
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-900">Title</label>
           <input
             type="text"
             value={formData.title}
             onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
             required
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Description</label>
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-900">Description</label>
           <textarea
             value={formData.description}
             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            rows="3"
+            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+            rows="4"
             required
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Location</label>
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-900">Location</label>
           <input
             type="text"
             value={formData.location}
             onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
             required
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Price per night</label>
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-900">Price per night ($)</label>
           <input
             type="number"
             value={formData.pricePerNight}
             onChange={(e) => setFormData(prev => ({ ...prev, pricePerNight: e.target.value }))}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
             required
             min="0"
           />
         </div>
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="w-full p-2 border rounded"
-        />
+        <div className="space-y-4">
+          <label className="block text-sm font-medium text-gray-900">Images</label>
+          <div className="flex items-center justify-center w-full">
+            <label className="w-full flex flex-col items-center px-4 py-6 bg-white rounded-lg border-2 border-gray-300 border-dashed cursor-pointer hover:border-orange-500 transition-colors">
+              <FaUpload className="w-8 h-8 text-gray-400" />
+              <span className="mt-2 text-sm text-gray-500">Click to upload images</span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+            </label>
+          </div>
+        </div>
 
-        {/* Display uploaded images */}
-        <div className="grid grid-cols-2 gap-2 mt-4">
+        {/* Image Preview Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
           {formData.images.map((url, index) => (
-            <div key={url} className="relative">
-              <div className="relative w-full h-24">
+            <div key={url} className="relative group">
+              <div className="relative aspect-square w-full overflow-hidden rounded-lg">
                 <Image
                   src={url}
                   alt={`Property image ${index + 1}`}
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded"
+                  fill
+                  className="object-cover transition-transform group-hover:scale-105"
                 />
               </div>
-              <button
-                type="button"
+              <Button
+                variant="destructive"
+                size="icon"
                 onClick={() => {
                   setFormData(prev => ({
                     ...prev,
                     images: prev.images.filter(img => img !== url),
                   }));
                 }}
-                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                className="absolute -top-2 -right-2 w-8 h-8 rounded-full shadow-lg"
               >
-                ×
-              </button>
+                <FaTimes className="w-4 h-4" />
+              </Button>
             </div>
           ))}
         </div>
       </div>
 
-      <button
+      <Button
         type="submit"
         disabled={isLoading}
-        className={`w-full bg-blue-600 text-white p-2 rounded ${
-          isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
-        }`}
+        className="w-full"
       >
-        {isLoading ? 'Saving...' : initialData ? 'Update Property' : 'Add Property'}
-      </button>
+        {isLoading ? (
+          <>
+            <FaSpinner className="animate-spin mr-2" />
+            {initialData ? 'Updating...' : 'Adding...'}
+          </>
+        ) : (
+          initialData ? 'Update Property' : 'Add Property'
+        )}
+      </Button>
     </form>
   );
-} 
+}

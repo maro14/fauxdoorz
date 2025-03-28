@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { FaCircle, FaMapMarkerAlt, FaDollarSign, FaCalendarCheck, FaStar, FaBed, FaBath } from 'react-icons/fa';
+import { FaCircle, FaMapMarkerAlt, FaDollarSign, FaCalendarCheck, FaStar, FaBed, FaBath, FaUser } from 'react-icons/fa';
 import { Button } from './ui/Button';
 
 export default function PropertyTile({ property }) {
@@ -14,6 +14,7 @@ export default function PropertyTile({ property }) {
     status = 'available',
     bedrooms,
     bathrooms,
+    maxGuests,
     rating = 4.5
   } = property;
 
@@ -48,77 +49,83 @@ export default function PropertyTile({ property }) {
 
   return (
     <Link href={`/properties/${_id}`} passHref>
-      <div className="group relative bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden">
+      <div className="group relative bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden h-full border border-gray-100">
         {/* Image Container */}
         <div className="relative aspect-[4/3] overflow-hidden">
           <Image
             src={imageUrl}
             alt={title}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-110"
+            className="object-cover"
             placeholder="blur"
             blurDataURL="/images/placeholder-blur.jpg"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
           
           {/* Status Badge */}
           <div className="absolute top-3 right-3 z-10">
             <span className={`px-3 py-1 text-xs font-bold rounded-full flex items-center gap-1 ${
-              isBooked ? 'bg-red-500' : 'bg-green-500'
-            } text-white shadow-md`}>
-              <FaCircle className="w-2 h-2" />
+              isBooked ? 'bg-red-500/90' : 'bg-green-500/90'
+            } text-white shadow-md backdrop-blur-sm`}>
+              <FaCircle className="w-2 h-2 animate-pulse" />
               {isBooked ? 'Booked' : 'Available'}
             </span>
           </div>
 
           {/* Rating Badge */}
           <div className="absolute top-3 left-3 z-10">
-            <span className="px-2 py-1 text-xs font-bold rounded-md bg-yellow-400 text-gray-800 flex items-center">
-              <FaStar className="mr-1" />
+            <span className="px-2 py-1 text-xs font-bold rounded-md bg-yellow-400/90 text-gray-800 flex items-center backdrop-blur-sm">
+              <FaStar className="mr-1 text-yellow-600" />
               {rating}
             </span>
           </div>
         </div>
 
         {/* Property Details */}
-        <div className="p-4 flex-grow">
-          <h2 className="text-xl font-bold text-gray-800 line-clamp-1 mb-2">{title}</h2>
+        <div className="p-5 flex-grow">
+          <h2 className="text-xl font-bold text-gray-800 line-clamp-1 mb-2 group-hover:text-orange-500 transition-colors">{title}</h2>
           
-          <div className="flex items-center text-gray-600 mb-2">
-            <FaMapMarkerAlt className="mr-1 text-orange-500 flex-shrink-0" />
+          <div className="flex items-center text-gray-600 mb-3">
+            <FaMapMarkerAlt className="mr-2 text-orange-500 flex-shrink-0" />
             <p className="text-sm line-clamp-1">{location}</p>
           </div>
 
-          <div className="flex items-center gap-4 text-gray-600 mb-3">
+          <div className="flex items-center gap-4 text-gray-600 mb-4">
             {bedrooms && (
-              <div className="flex items-center gap-1">
-                <FaBed />
-                <span>{bedrooms} beds</span>
+              <div className="flex items-center gap-1.5">
+                <FaBed className="text-gray-500" />
+                <span className="text-sm">{bedrooms} {bedrooms === 1 ? 'bed' : 'beds'}</span>
               </div>
             )}
             {bathrooms && (
-              <div className="flex items-center gap-1">
-                <FaBath />
-                <span>{bathrooms} baths</span>
+              <div className="flex items-center gap-1.5">
+                <FaBath className="text-gray-500" />
+                <span className="text-sm">{bathrooms} {bathrooms === 1 ? 'bath' : 'baths'}</span>
+              </div>
+            )}
+            {maxGuests && (
+              <div className="flex items-center gap-1.5">
+                <FaUser className="text-gray-500" />
+                <span className="text-sm">{maxGuests} {maxGuests === 1 ? 'guest' : 'guests'}</span>
               </div>
             )}
           </div>
 
           <div className="flex items-center text-orange-500 font-bold">
             <FaDollarSign className="mr-1" />
-            <span className="text-lg">{pricePerNight.toLocaleString()}</span>
+            <span className="text-lg">{typeof pricePerNight === 'number' ? pricePerNight.toLocaleString() : pricePerNight}</span>
             <span className="text-gray-500 text-sm font-normal ml-1">/ night</span>
           </div>
         </div>
 
         {/* Booking Button */}
-        <div className="p-4 pt-0">
+        <div className="p-5 pt-0">
           <Button
             onClick={handleBooking}
             disabled={isBooked || isBooking}
             variant={isBooked ? 'secondary' : 'default'}
-            fullWidth
+            className="w-full transition-all duration-300 group-hover:shadow-md"
           >
             {isBooked ? (
               <>

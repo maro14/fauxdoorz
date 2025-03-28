@@ -3,6 +3,17 @@ import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/globals.css';
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+})
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-plus-jakarta',
+})
 
 // Auth protection wrapper
 function AuthWrapper({ children, requireAuth }) {
@@ -35,11 +46,13 @@ function MyApp({ Component, pageProps: { session, requireAuth, ...pageProps } })
   const isAuthPage = router.pathname.startsWith('/auth/');
   return (
     <SessionProvider session={session}>
-      <AuthWrapper requireAuth={requireAuth}>
-        {!isAuthPage && <Navbar />}
-        <Component {...pageProps} />
-        {!isAuthPage && <Footer />}
-      </AuthWrapper>
+      <div className={`${inter.variable} ${plusJakarta.variable} font-sans`}>
+        <AuthWrapper requireAuth={requireAuth}>
+          {!isAuthPage && <Navbar />}
+          <Component {...pageProps} />
+          {!isAuthPage && <Footer />}
+        </AuthWrapper>
+      </div>
     </SessionProvider>
   );
 }
