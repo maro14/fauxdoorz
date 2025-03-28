@@ -17,7 +17,7 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
     bedrooms: initialData?.bedrooms || 1,
     bathrooms: initialData?.bathrooms || 1,
     maxGuests: initialData?.maxGuests || 1,
-    amenities: initialData?.amenities || [],
+    amenities: initialData?.amenities || [], // Ensure this is always an array
     propertyType: initialData?.propertyType || 'apartment',
     squareFeet: initialData?.squareFeet || '',
     yearBuilt: initialData?.yearBuilt || '',
@@ -123,6 +123,7 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
       </h2>
 
       <div className="space-y-6">
+        {/* Basic Information */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-900">Title</label>
           <input
@@ -132,6 +133,22 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
             className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
             required
           />
+        </div>
+
+        {/* Property Type */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-900">Property Type</label>
+          <select
+            value={formData.propertyType}
+            onChange={(e) => setFormData(prev => ({ ...prev, propertyType: e.target.value }))}
+            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+          >
+            {propertyTypes.map(type => (
+              <option key={type} value={type}>
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="space-y-2">
@@ -156,6 +173,45 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
           />
         </div>
 
+        {/* Property Details */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-900">Bedrooms</label>
+            <input
+              type="number"
+              value={formData.bedrooms}
+              onChange={(e) => setFormData(prev => ({ ...prev, bedrooms: parseInt(e.target.value) }))}
+              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              required
+              min="0"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-900">Bathrooms</label>
+            <input
+              type="number"
+              value={formData.bathrooms}
+              onChange={(e) => setFormData(prev => ({ ...prev, bathrooms: parseInt(e.target.value) }))}
+              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              required
+              min="0"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-900">Max Guests</label>
+            <input
+              type="number"
+              value={formData.maxGuests}
+              onChange={(e) => setFormData(prev => ({ ...prev, maxGuests: parseInt(e.target.value) }))}
+              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              required
+              min="1"
+            />
+          </div>
+        </div>
+
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-900">Price per night ($)</label>
           <input
@@ -166,6 +222,108 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
             required
             min="0"
           />
+        </div>
+
+        {/* Additional Property Details */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-900">Square Feet</label>
+            <input
+              type="number"
+              value={formData.squareFeet}
+              onChange={(e) => setFormData(prev => ({ ...prev, squareFeet: e.target.value }))}
+              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              min="0"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-900">Year Built</label>
+            <input
+              type="number"
+              value={formData.yearBuilt}
+              onChange={(e) => setFormData(prev => ({ ...prev, yearBuilt: e.target.value }))}
+              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              min="1800"
+              max={new Date().getFullYear()}
+            />
+          </div>
+        </div>
+
+        {/* Check-in/Check-out Times */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-900">Check-in Time</label>
+            <input
+              type="time"
+              value={formData.checkInTime}
+              onChange={(e) => setFormData(prev => ({ ...prev, checkInTime: e.target.value }))}
+              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-900">Check-out Time</label>
+            <input
+              type="time"
+              value={formData.checkOutTime}
+              onChange={(e) => setFormData(prev => ({ ...prev, checkOutTime: e.target.value }))}
+              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+            />
+          </div>
+        </div>
+
+        {/* Policies */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="petsAllowed"
+              checked={formData.petsAllowed}
+              onChange={(e) => setFormData(prev => ({ ...prev, petsAllowed: e.target.checked }))}
+              className="rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+            />
+            <label htmlFor="petsAllowed" className="text-sm font-medium text-gray-900">Pets Allowed</label>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="smokingAllowed"
+              checked={formData.smokingAllowed}
+              onChange={(e) => setFormData(prev => ({ ...prev, smokingAllowed: e.target.checked }))}
+              className="rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+            />
+            <label htmlFor="smokingAllowed" className="text-sm font-medium text-gray-900">Smoking Allowed</label>
+          </div>
+        </div>
+
+        {/* Amenities */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-900">Amenities</label>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {amenityOptions.map((amenity) => (
+              <label key={amenity.id} className="flex items-center space-x-2 p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={Array.isArray(formData.amenities) && formData.amenities.includes(amenity.id)}
+                  onChange={(e) => {
+                    setFormData(prev => ({
+                      ...prev,
+                      amenities: e.target.checked 
+                        ? [...(prev.amenities || []), amenity.id]
+                        : (prev.amenities || []).filter(a => a !== amenity.id)
+                    }));
+                  }}
+                  className="rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+                />
+                <span className="flex items-center text-sm">
+                  <span className="mr-2 text-gray-600">{amenity.icon}</span>
+                  {amenity.label}
+                </span>
+              </label>
+            ))}
+          </div>
         </div>
 
         <div className="space-y-4">

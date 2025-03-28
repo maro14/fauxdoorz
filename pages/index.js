@@ -73,23 +73,43 @@ export default function Home() {
   // Hero Section Component
   const HeroSection = () => (
     <section
-      className="text-center mb-12 border-none relative flex flex-col items-center justify-center"
+      className="relative flex flex-col items-center justify-center mb-12"
       style={{
         backgroundImage: `url(/House.jpg)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        height: '100vh',
+        height: '90vh',
       }}
     >
-      <div className="absolute inset-0 bg-black opacity-50"></div> {/* Dark overlay */}
-      <div className="relative z-10">
-        <h1 className="text-5xl text-white font-bold mb-4 py-6">Welcome to fauxDoorz</h1>
-        <p className="text-lg text-white mb-8">Discover beautiful vacation rentals for your next getaway.</p>
-        <Link href="/properties" className="bg-green-500 text-white py-2 px-6 rounded-md">
-          Browse Properties
-        </Link>
-        {/* Search Box */}
-        <div className="mt-8">
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/40"></div>
+      
+      <div className="relative z-10 container mx-auto px-6 text-center md:text-left md:max-w-3xl">
+        <h1 className="text-4xl md:text-6xl text-white font-bold mb-4 leading-tight">
+          Find Your Perfect <span className="text-orange-500">Vacation Home</span>
+        </h1>
+        <p className="text-xl text-gray-200 mb-8 max-w-2xl">
+          Discover beautiful vacation rentals in top destinations worldwide. Book unique homes and experiences all around the globe.
+        </p>
+        
+        <div className="flex flex-col md:flex-row gap-4 justify-center md:justify-start">
+          <Link 
+            href="/properties" 
+            className="bg-orange-500 hover:bg-orange-600 text-white py-3 px-8 rounded-lg font-medium transition-colors shadow-lg"
+          >
+            Browse Properties
+          </Link>
+          <Link 
+            href="/host" 
+            className="bg-white hover:bg-gray-100 text-gray-900 py-3 px-8 rounded-lg font-medium transition-colors shadow-lg"
+          >
+            Become a Host
+          </Link>
+        </div>
+      </div>
+      
+      {/* Search Box - Positioned at bottom of hero */}
+      <div className="absolute bottom-0 left-0 right-0 transform translate-y-1/2 z-20 px-4">
+        <div className="bg-white rounded-xl shadow-2xl max-w-5xl mx-auto overflow-hidden">
           <SearchBox onSearch={handleSearch} />
         </div>
       </div>
@@ -131,7 +151,7 @@ export default function Home() {
             <PropertyTile key={property._id} property={property} />
           ))
         ) : (
-          <p className="text-center text-white col-span-3">
+          <p className="text-center text-gray-700 col-span-full py-8 text-lg font-medium">
             No properties found matching your search criteria.
           </p>
         )}
