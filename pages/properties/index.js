@@ -1,6 +1,6 @@
 // pages/properties/index.js
 import { useEffect, useState } from 'react';
-import PropertyCard from '../../components/PropertyCard';
+import PropertyCard from '../../components/PropertyTile';
 import { FaHome, FaExclamationCircle, FaSpinner } from 'react-icons/fa';
 
 export default function PropertyList() {

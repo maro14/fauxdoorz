@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import PropertyCard from '../components/PropertyCard';
+import PropertyTile from '../components/PropertyTile';
 import SearchBox from '../components/SearchBox';
 
 export default function Home() {
@@ -109,7 +109,7 @@ export default function Home() {
               key={property._id}
               className="bg-white rounded-2xl shadow-lg overflow-hidden transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl"
             >
-              <PropertyCard property={property} />
+              <PropertyTile property={property} />
             </div>
           ))
         ) : (
@@ -128,7 +128,7 @@ export default function Home() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {properties.length > 0 ? (
           properties.map((property) => (
-            <PropertyCard key={property._id} property={property} />
+            <PropertyTile key={property._id} property={property} />
           ))
         ) : (
           <p className="text-center text-white col-span-3">
