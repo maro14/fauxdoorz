@@ -5,9 +5,21 @@
 /* Define global styles in the `base` layer */
 @layer base {
     body {
-        background: linear-gradient(to bottom right, #f97316, #f59e0b);
+        /* Modern subtle gradient background */
+        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
         min-height: 100vh; /* Ensures it covers the full viewport */
         margin: 0;
         padding: 0;
+    }
+}
+
+/* Additional modern styling elements */
+@layer components {
+    .glass-card {
+        @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-lg;
+    }
+    
+    .content-container {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
     }
 }
