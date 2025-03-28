@@ -2,6 +2,7 @@ import { SessionProvider, useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 import '../styles/globals.css';
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 
@@ -23,12 +24,9 @@ function AuthWrapper({ children, requireAuth }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="flex flex-col items-center space-y-4">
-          {/* Spinner */}
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500"></div>
-          <p className="text-lg font-medium text-gray-700">Loading...</p>
-        </div>
+      <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50">
+        <LoadingSpinner size="lg" color="orange" />
+        <p className="text-lg font-medium text-gray-700 mt-6">Setting up your session...</p>
       </div>
     );
   }

@@ -25,7 +25,8 @@ export default async function handler(req, res) {
     // Create user
     const user = await User.create({
       email,
-      password // Password will be hashed by the model middleware
+      password, // Password will be hashed by the model middleware
+      name: email.split('@')[0] // Use part of the email as a default name
     });
 
     res.status(201).json({

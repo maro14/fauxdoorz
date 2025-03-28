@@ -111,170 +111,168 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
   ];
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+    <form onSubmit={handleSubmit} className="space-y-4 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
-          <p className="text-red-700 font-medium">{error}</p>
+        <div className="bg-red-50 border-l-4 border-red-400 p-3 rounded-md">
+          <p className="text-red-700 text-sm font-medium">{error}</p>
         </div>
       )}
       
-      <h2 className="text-2xl font-bold text-gray-900">
+      <h2 className="text-xl font-bold text-gray-900">
         {initialData ? 'Edit Property' : 'Add New Property'}
       </h2>
 
-      <div className="space-y-6">
-        {/* Basic Information */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-900">Title</label>
-          <input
-            type="text"
-            value={formData.title}
-            onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-            required
-          />
+      <div className="space-y-4">
+        {/* Basic Information - Two columns layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-700">Title</label>
+            <input
+              type="text"
+              value={formData.title}
+              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+              className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:ring-1 focus:ring-orange-500 focus:border-transparent transition-all"
+              required
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-700">Property Type</label>
+            <select
+              value={formData.propertyType}
+              onChange={(e) => setFormData(prev => ({ ...prev, propertyType: e.target.value }))}
+              className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:ring-1 focus:ring-orange-500 focus:border-transparent transition-all"
+            >
+              {propertyTypes.map(type => (
+                <option key={type} value={type}>
+                  {type.charAt(0).toUpperCase() + type.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        {/* Property Type */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-900">Property Type</label>
-          <select
-            value={formData.propertyType}
-            onChange={(e) => setFormData(prev => ({ ...prev, propertyType: e.target.value }))}
-            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-          >
-            {propertyTypes.map(type => (
-              <option key={type} value={type}>
-                {type.charAt(0).toUpperCase() + type.slice(1)}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-900">Description</label>
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-gray-700">Description</label>
           <textarea
             value={formData.description}
             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-            rows="4"
+            className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:ring-1 focus:ring-orange-500 focus:border-transparent transition-all"
+            rows="3"
             required
           />
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-900">Location</label>
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-gray-700">Location</label>
           <input
             type="text"
             value={formData.location}
             onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+            className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:ring-1 focus:ring-orange-500 focus:border-transparent transition-all"
             required
           />
         </div>
 
-        {/* Property Details */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-900">Bedrooms</label>
+        {/* Property Details - Three columns layout */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-700">Bedrooms</label>
             <input
               type="number"
               value={formData.bedrooms}
               onChange={(e) => setFormData(prev => ({ ...prev, bedrooms: parseInt(e.target.value) }))}
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:ring-1 focus:ring-orange-500 focus:border-transparent transition-all"
               required
               min="0"
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-900">Bathrooms</label>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-700">Bathrooms</label>
             <input
               type="number"
               value={formData.bathrooms}
               onChange={(e) => setFormData(prev => ({ ...prev, bathrooms: parseInt(e.target.value) }))}
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:ring-1 focus:ring-orange-500 focus:border-transparent transition-all"
               required
               min="0"
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-900">Max Guests</label>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-700">Max Guests</label>
             <input
               type="number"
               value={formData.maxGuests}
               onChange={(e) => setFormData(prev => ({ ...prev, maxGuests: parseInt(e.target.value) }))}
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:ring-1 focus:ring-orange-500 focus:border-transparent transition-all"
               required
               min="1"
             />
           </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-700">Price/night ($)</label>
+            <input
+              type="number"
+              value={formData.pricePerNight}
+              onChange={(e) => setFormData(prev => ({ ...prev, pricePerNight: e.target.value }))}
+              className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:ring-1 focus:ring-orange-500 focus:border-transparent transition-all"
+              required
+              min="0"
+            />
+          </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-900">Price per night ($)</label>
-          <input
-            type="number"
-            value={formData.pricePerNight}
-            onChange={(e) => setFormData(prev => ({ ...prev, pricePerNight: e.target.value }))}
-            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-            required
-            min="0"
-          />
-        </div>
-
-        {/* Additional Property Details */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-900">Square Feet</label>
+        {/* Additional Property Details - Four columns layout */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-700">Square Feet</label>
             <input
               type="number"
               value={formData.squareFeet}
               onChange={(e) => setFormData(prev => ({ ...prev, squareFeet: e.target.value }))}
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:ring-1 focus:ring-orange-500 focus:border-transparent transition-all"
               min="0"
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-900">Year Built</label>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-700">Year Built</label>
             <input
               type="number"
               value={formData.yearBuilt}
               onChange={(e) => setFormData(prev => ({ ...prev, yearBuilt: e.target.value }))}
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:ring-1 focus:ring-orange-500 focus:border-transparent transition-all"
               min="1800"
               max={new Date().getFullYear()}
             />
           </div>
-        </div>
 
-        {/* Check-in/Check-out Times */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-900">Check-in Time</label>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-700">Check-in Time</label>
             <input
               type="time"
               value={formData.checkInTime}
               onChange={(e) => setFormData(prev => ({ ...prev, checkInTime: e.target.value }))}
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:ring-1 focus:ring-orange-500 focus:border-transparent transition-all"
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-900">Check-out Time</label>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-700">Check-out Time</label>
             <input
               type="time"
               value={formData.checkOutTime}
               onChange={(e) => setFormData(prev => ({ ...prev, checkOutTime: e.target.value }))}
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:ring-1 focus:ring-orange-500 focus:border-transparent transition-all"
             />
           </div>
         </div>
 
-        {/* Policies */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Policies - Inline layout */}
+        <div className="flex flex-wrap gap-4">
           <div className="flex items-center space-x-2">
             <input
               type="checkbox"
@@ -283,7 +281,7 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
               onChange={(e) => setFormData(prev => ({ ...prev, petsAllowed: e.target.checked }))}
               className="rounded border-gray-300 text-orange-500 focus:ring-orange-500"
             />
-            <label htmlFor="petsAllowed" className="text-sm font-medium text-gray-900">Pets Allowed</label>
+            <label htmlFor="petsAllowed" className="text-xs font-medium text-gray-700">Pets Allowed</label>
           </div>
 
           <div className="flex items-center space-x-2">
@@ -294,16 +292,16 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
               onChange={(e) => setFormData(prev => ({ ...prev, smokingAllowed: e.target.checked }))}
               className="rounded border-gray-300 text-orange-500 focus:ring-orange-500"
             />
-            <label htmlFor="smokingAllowed" className="text-sm font-medium text-gray-900">Smoking Allowed</label>
+            <label htmlFor="smokingAllowed" className="text-xs font-medium text-gray-700">Smoking Allowed</label>
           </div>
         </div>
 
-        {/* Amenities */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-900">Amenities</label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {/* Amenities - Compact grid */}
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-gray-700">Amenities</label>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {amenityOptions.map((amenity) => (
-              <label key={amenity.id} className="flex items-center space-x-2 p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+              <label key={amenity.id} className="flex items-center space-x-1 p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors text-xs">
                 <input
                   type="checkbox"
                   checked={Array.isArray(formData.amenities) && formData.amenities.includes(amenity.id)}
@@ -317,8 +315,8 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
                   }}
                   className="rounded border-gray-300 text-orange-500 focus:ring-orange-500"
                 />
-                <span className="flex items-center text-sm">
-                  <span className="mr-2 text-gray-600">{amenity.icon}</span>
+                <span className="flex items-center">
+                  <span className="mr-1 text-gray-600">{amenity.icon}</span>
                   {amenity.label}
                 </span>
               </label>
@@ -326,12 +324,13 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
           </div>
         </div>
 
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-900">Images</label>
+        {/* Image Upload - Compact */}
+        <div className="space-y-2">
+          <label className="block text-xs font-medium text-gray-700">Images</label>
           <div className="flex items-center justify-center w-full">
-            <label className="w-full flex flex-col items-center px-4 py-6 bg-white rounded-lg border-2 border-gray-300 border-dashed cursor-pointer hover:border-orange-500 transition-colors">
-              <FaUpload className="w-8 h-8 text-gray-400" />
-              <span className="mt-2 text-sm text-gray-500">Click to upload images</span>
+            <label className="w-full flex flex-col items-center px-3 py-4 bg-white rounded-lg border border-gray-300 border-dashed cursor-pointer hover:border-orange-500 transition-colors">
+              <FaUpload className="w-5 h-5 text-gray-400" />
+              <span className="mt-1 text-xs text-gray-500">Click to upload images</span>
               <input
                 type="file"
                 accept="image/*"
@@ -342,40 +341,42 @@ export default function PropertyForm({ onPropertyAdded, initialData }) {
           </div>
         </div>
 
-        {/* Image Preview Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
-          {formData.images.map((url, index) => (
-            <div key={url} className="relative group">
-              <div className="relative aspect-square w-full overflow-hidden rounded-lg">
-                <Image
-                  src={url}
-                  alt={`Property image ${index + 1}`}
-                  fill
-                  className="object-cover transition-transform group-hover:scale-105"
-                />
+        {/* Image Preview Grid - Compact */}
+        {formData.images.length > 0 && (
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 mt-2">
+            {formData.images.map((url, index) => (
+              <div key={url} className="relative group">
+                <div className="relative aspect-square w-full overflow-hidden rounded-md">
+                  <Image
+                    src={url}
+                    alt={`Property image ${index + 1}`}
+                    fill
+                    className="object-cover transition-transform group-hover:scale-105"
+                  />
+                </div>
+                <Button
+                  variant="destructive"
+                  size="icon"
+                  onClick={() => {
+                    setFormData(prev => ({
+                      ...prev,
+                      images: prev.images.filter(img => img !== url),
+                    }));
+                  }}
+                  className="absolute -top-1 -right-1 w-5 h-5 rounded-full shadow-lg p-0"
+                >
+                  <FaTimes className="w-3 h-3" />
+                </Button>
               </div>
-              <Button
-                variant="destructive"
-                size="icon"
-                onClick={() => {
-                  setFormData(prev => ({
-                    ...prev,
-                    images: prev.images.filter(img => img !== url),
-                  }));
-                }}
-                className="absolute -top-2 -right-2 w-8 h-8 rounded-full shadow-lg"
-              >
-                <FaTimes className="w-4 h-4" />
-              </Button>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <Button
         type="submit"
         disabled={isLoading}
-        className="w-full"
+        className="w-full py-1.5 text-sm"
       >
         {isLoading ? (
           <>

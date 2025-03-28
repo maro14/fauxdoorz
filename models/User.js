@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: [true, 'Please provide a name'],
+    required: false, // Changed from required: [true, 'Please provide a name']
   },
   image: {
     type: String,
