@@ -2,13 +2,29 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
 
 export default function Navbar() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  // Handle scroll events to show/hide navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      const isVisible = prevScrollPos > currentScrollPos || currentScrollPos < 10;
+      
+      setPrevScrollPos(currentScrollPos);
+      setVisible(isVisible);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [prevScrollPos]);
 
   const handleSignOut = useCallback(async () => {
     try {
@@ -20,7 +36,7 @@ export default function Navbar() {
   }, [router]);
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-lg border-b border-gray-100/20 font-inter">
+    <nav className={`fixed top-0 w-full z-50 bg-white/90 backdrop-blur-lg border-b border-gray-100/20 font-inter transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
           {/* Logo Section */}
@@ -33,7 +49,7 @@ export default function Navbar() {
                 height={45} 
                 className="rounded-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg" 
               />
-              <span className="text-2xl font-extrabold bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 bg-clip-text text-transparent tracking-tight">
+              <span className="text-3xl font-extrabold bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 bg-clip-text text-transparent tracking-tight">
                 fauxDoorz
               </span>
             </Link>
@@ -43,7 +59,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-8">
             <Link 
               href="/properties"
-              className="text-gray-700 hover:text-orange-500 px-3 py-2 text-sm font-medium tracking-wide transition-all duration-200 hover:scale-105"
+              className="text-gray-700 hover:text-orange-500 px-3 py-2 text-base font-medium tracking-wide transition-all duration-200 hover:scale-105"
             >
               Browse Properties
             </Link>
@@ -54,21 +70,21 @@ export default function Navbar() {
               <>
                 <Link 
                   href="/dashboard"
-                  className="text-gray-700 hover:text-orange-500 px-3 py-2 text-sm font-medium tracking-wide transition-all duration-200 hover:scale-105"
+                  className="text-gray-700 hover:text-orange-500 px-3 py-2 text-base font-medium tracking-wide transition-all duration-200 hover:scale-105"
                 >
                   Dashboard
                 </Link>
                 
                 {/* User Menu */}
                 <div className="relative flex items-center space-x-4">
-                  <span className="text-sm font-medium text-gray-700 tracking-wide">
+                  <span className="text-base font-medium text-gray-700 tracking-wide">
                     {session.user.name || session.user.email}
                   </span>
                   <Button
                     variant="outline"
-                    size="sm"
+                    size="default"
                     onClick={handleSignOut}
-                    className="shadow-sm hover:shadow-md transition-shadow duration-200"
+                    className="shadow-sm hover:shadow-md transition-shadow duration-200 text-base"
                   >
                     Sign Out
                   </Button>
@@ -78,16 +94,16 @@ export default function Navbar() {
               <div className="flex items-center space-x-4">
                 <Button 
                   variant="ghost" 
-                  size="sm" 
+                  size="default" 
                   asChild 
-                  className="hover:scale-105 transition-transform duration-200"
+                  className="hover:scale-105 transition-transform duration-200 text-base"
                 >
                   <Link href="/auth/signin">Sign In</Link>
                 </Button>
                 <Button 
-                  size="sm" 
+                  size="default" 
                   asChild 
-                  className="shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105"
+                  className="shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105 text-base"
                 >
                   <Link href="/auth/signup">Sign Up</Link>
                 </Button>
@@ -99,7 +115,7 @@ export default function Navbar() {
           <div className="md:hidden flex items-center">
             <Button
               variant="ghost"
-              size="sm"
+              size="default"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-2 hover:bg-orange-50"
               aria-expanded={isMenuOpen}
@@ -135,7 +151,7 @@ export default function Navbar() {
         <div className="px-4 py-4 space-y-3">
           <Link 
             href="/properties"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50"
+            className="block px-3 py-2 rounded-md text-lg font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50"
             onClick={() => setIsMenuOpen(false)}
           >
             Browse Properties
@@ -145,14 +161,14 @@ export default function Navbar() {
             <>
               <Link 
                 href="/dashboard"
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50"
+                className="block px-3 py-2 rounded-md text-lg font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Dashboard
               </Link>
               <Button
                 variant="ghost"
-                className="w-full justify-start"
+                className="w-full justify-start text-lg"
                 onClick={() => {
                   setIsMenuOpen(false);
                   handleSignOut();
@@ -163,12 +179,12 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Button variant="ghost" className="w-full justify-start" asChild>
+              <Button variant="ghost" className="w-full justify-start text-lg" asChild>
                 <Link href="/auth/signin" onClick={() => setIsMenuOpen(false)}>
                   Sign In
                 </Link>
               </Button>
-              <Button className="w-full" asChild>
+              <Button className="w-full text-lg" asChild>
                 <Link href="/auth/signup" onClick={() => setIsMenuOpen(false)}>
                   Sign Up
                 </Link>
