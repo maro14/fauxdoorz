@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import PropertyTile from '../components/PropertyTile';
 import SearchBox from '../components/SearchBox';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 export default function Home() {
   const [properties, setProperties] = useState([]);
@@ -160,21 +161,31 @@ export default function Home() {
   );
 
   return (
-    <div className="container mx-auto ">
+    <div className="container mx-auto">
       {/* Hero Section */}
       <HeroSection />
 
       {/* Loading Indicator */}
-      {loading && <p className="text-center">Loading properties...</p>}
+      {loading && (
+        <div className="flex justify-center items-center py-8">
+          <LoadingSpinner size="lg" color="orange" />
+        </div>
+      )}
 
       {/* Error Display */}
-      {error && <p className="text-center text-red-500">{error}</p>}
+      {error && (
+        <div className="bg-red-50 text-red-700 p-4 rounded-lg text-center max-w-2xl mx-auto my-8">
+          {error}
+        </div>
+      )}
 
       {/* Featured Properties Section */}
-      <FeaturedPropertiesSection />
+      {!loading && <FeaturedPropertiesSection />}
 
       {/* Search Results Section - Only Show if Search is Performed */}
-      {searchPerformed && <SearchResultsSection />}
+      {searchPerformed && !loading && (
+        <SearchResultsSection />
+      )}
     </div>
   );
 }

@@ -106,7 +106,7 @@ export default function PropertyList() {
             </div>
             <h2 className="text-2xl font-semibold text-gray-800 mb-3">No properties available</h2>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              We're currently updating our inventory with new amazing properties. Please check back soon for exciting new listings!
+              We&apos;re currently updating our inventory with new amazing properties. Please check back soon for exciting new listings!
             </p>
             <button className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-md hover:shadow-lg font-medium">
               Notify Me When Available

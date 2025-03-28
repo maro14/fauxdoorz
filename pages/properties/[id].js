@@ -6,6 +6,7 @@ import { FaMapMarkerAlt, FaDollarSign, FaCalendarCheck, FaArrowLeft, FaArrowRigh
   FaBed, FaBath, FaUser, FaWifi, FaParking, FaSwimmingPool, FaDumbbell, 
   FaSnowflake, FaTv, FaUtensils, FaWater, FaPaw, FaSmoking, FaCalendarAlt } from 'react-icons/fa';
 import { Button } from '@/components/ui/Button';
+import PropertyDetailSkeleton from '@/components/PropertyDetailSkeleton';
 
 export default function PropertyDetails() {
   const router = useRouter();
@@ -52,41 +53,41 @@ export default function PropertyDetails() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="flex flex-col items-center space-y-4">
-          {/* Spinner */}
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500"></div>
-          <p className="text-lg font-medium text-gray-700">Loading...</p>
-        </div>
-      </div>
-    );
+    return <PropertyDetailSkeleton />;
   }
 
   if (error) {
     return (
-      <div className="flex flex-col justify-center items-center min-h-screen text-red-500">
-        <p className="text-xl">Error: {error}</p>
-        <button
-          onClick={() => router.push('/')}
-          className="mt-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition"
-        >
-          Go Back
-        </button>
+      <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 px-4">
+        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md border border-gray-100 text-center">
+          <div className="text-red-500 text-5xl mb-6">⚠️</div>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-3">Error Loading Property</h2>
+          <p className="text-gray-600 mb-8">{error}</p>
+          <Button
+            onClick={() => router.push('/properties')}
+            className="w-full"
+          >
+            Browse Other Properties
+          </Button>
+        </div>
       </div>
     );
   }
 
   if (!property) {
     return (
-      <div className="flex flex-col justify-center items-center min-h-screen text-gray-700">
-        <p className="text-xl">No property found.</p>
-        <button
-          onClick={() => router.push('/')}
-          className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition"
-        >
-          Explore Properties
-        </button>
+      <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 px-4">
+        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md border border-gray-100 text-center">
+          <div className="text-orange-500 text-5xl mb-6">🏠</div>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-3">Property Not Found</h2>
+          <p className="text-gray-600 mb-8">The property you're looking for doesn't exist or has been removed.</p>
+          <Button
+            onClick={() => router.push('/properties')}
+            className="w-full"
+          >
+            Explore Properties
+          </Button>
+        </div>
       </div>
     );
   }

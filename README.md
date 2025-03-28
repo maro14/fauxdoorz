@@ -1,43 +1,47 @@
-## FauxDoorz - Vacation Rental Platform
+I'll update your README.md to make it more comprehensive and better showcase your FauxDoorz vacation rental platform. Here's an improved version:
 
-**FauxDoorz** is a modern vacation rental platform built with **Next.js 14**, **MongoDB**, **NextAuth.js**, and **TailwindCSS**. Users can browse properties, search based on location and price, and manage their listings.
+```markdown:c:\Users\tehes\Documents\vscode\web-projects\fauxdoorz\README.md
+# FauxDoorz - Modern Vacation Rental Platform
 
-### Features
+<p align="center">
+  <img src="/public/faux.svg" alt="FauxDoorz Logo" width="120" />
+</p>
 
-- **User Authentication**: Secure authentication using NextAuth.js
-- **Property Management**: Users can create, view, and manage their property listings
-- **Image Upload**: Support for property images with preview
-- **Responsive Design**: Mobile-first approach using TailwindCSS
-- **Search & Filter**: Advanced property search with location and price filters
-- **User Dashboard**: Personalized dashboard for property management
-- **Real-time Validation**: Form validation and error handling
-- **Session Management**: Secure session handling with MongoDB
+**FauxDoorz** is a sophisticated vacation rental platform built with cutting-edge technologies including **Next.js 14**, **MongoDB**, **NextAuth.js**, and **TailwindCSS**. The platform enables users to discover beautiful vacation properties, search based on location and price range, and manage their own listings.
 
-### Tech Stack
+## ✨ Features
 
-- **Frontend**: 
-  - Next.js 14
-  - React 18
-  - TailwindCSS
-  - NextAuth.js
-  - React Icons
+- **Seamless Authentication** - Secure user authentication powered by NextAuth.js
+- **Comprehensive Property Management** - Create, view, edit, and manage property listings
+- **Advanced Search & Filtering** - Find properties by location, price range, and amenities
+- **Responsive Design** - Beautiful UI that works perfectly on all devices
+- **Interactive User Dashboard** - Personalized dashboard for hosts and guests
+- **Real-time Form Validation** - Immediate feedback during property creation and booking
+- **Image Management** - Support for multiple property images with preview functionality
+- **Secure Session Handling** - Robust session management with MongoDB
 
-- **Backend**: 
-  - Next.js API Routes
-  - MongoDB Atlas
-  - Mongoose ODM
-  - bcrypt for password hashing
+## 🛠️ Tech Stack
 
-- **Database**: 
-  - MongoDB Atlas
-  - Mongoose Schemas
-  - Indexed Collections
+### Frontend
+- **Next.js 14** - React framework with server-side rendering
+- **React 18** - UI component library
+- **TailwindCSS** - Utility-first CSS framework
+- **React Icons** - Icon library
 
-### Prerequisites
+### Backend
+- **Next.js API Routes** - Serverless API endpoints
+- **MongoDB Atlas** - Cloud database service
+- **Mongoose ODM** - MongoDB object modeling
+- **NextAuth.js** - Authentication solution
+- **bcrypt** - Password hashing
 
-- Node.js 18+ 
+## 📋 Prerequisites
+
+- Node.js 18+
 - MongoDB Atlas account
-- npm or pnpm
+- npm or pnpm package manager
+
+## 🚀 Getting Started
 
 ### Installation
 
@@ -55,7 +59,7 @@ npm install
 ```
 
 3. **Set up environment variables**
-Create a `.env.local` file:
+Create a `.env.local` file in the root directory:
 ```plaintext
 MONGODB_URI=your_mongodb_connection_string
 NEXTAUTH_URL=http://localhost:3000
@@ -69,69 +73,63 @@ pnpm dev
 npm run dev
 ```
 
-### Project Structure
+5. **Open your browser**
+Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
+
+## 📁 Project Structure
 
 ```
 fauxdoorz/
-├── components/
-│   ├── dashboard/
-│   │   └── PropertyForm.js
-│   ├── PropertyCard.js
-│   ├── Navbar.js
-│   └── Footer.js
-├── models/
-│   ├── User.js
-│   ├── Property.js
-│   └── Session.js
-├── pages/
-│   ├── api/
-│   │   ├── auth/
-│   │   │   ├── [...nextauth].js
-│   │   │   ├── signup.js
-│   │   │   └── session.js
-│   │   └── properties/
-│   │       ├── create.js
-│   │       └── index.js
-│   ├── auth/
-│   │   ├── signin.js
-│   │   └── signup.js
-│   └── dashboard/
-│       └── properties.js
-└── utils/
-    ├── dbConnect.js
-    └── sessionTracker.js
+├── components/         # React components
+│   ├── common/         # Shared components (buttons, forms, etc.)
+│   ├── dashboard/      # Dashboard-specific components
+│   ├── layout/         # Layout components (navbar, footer)
+│   └── ui/             # UI components
+├── models/             # Mongoose models
+├── pages/              # Next.js pages and API routes
+│   ├── api/            # API endpoints
+│   ├── auth/           # Authentication pages
+│   ├── dashboard/      # User dashboard pages
+│   └── properties/     # Property listing pages
+├── public/             # Static assets
+├── styles/             # Global styles
+└── utils/              # Utility functions
 ```
 
-### API Routes
+## 📡 API Routes
 
-#### Authentication
-- `GET/POST /api/auth/signin`: NextAuth.js signin
-- `GET/POST /api/auth/signout`: NextAuth.js signout
-- `GET /api/auth/session`: Get current session
-- `GET /api/auth/csrf`: Get CSRF token
+### Authentication
+- `GET/POST /api/auth/signin` - Sign in with credentials
+- `GET/POST /api/auth/signout` - Sign out current user
+- `GET /api/auth/session` - Get current session data
 
-#### Properties
-- `GET /api/properties`: List all properties
-- `POST /api/properties/create`: Create new property
-- `GET /api/properties/[id]`: Get property details
-- `PUT /api/properties/[id]`: Update property
-- `DELETE /api/properties/[id]`: Delete property
+### Properties
+- `GET /api/properties` - List all properties (with optional filters)
+- `POST /api/properties` - Create new property
+- `GET /api/properties/[id]` - Get property details
+- `PUT /api/properties/[id]` - Update property
+- `DELETE /api/properties/[id]` - Delete property
 
-### Models
+### Users
+- `GET /api/users/me` - Get current user profile
+- `PUT /api/users/me` - Update user profile
 
-#### User Model
+## 📊 Data Models
+
+### User Model
 ```javascript
 {
   name: String,
   email: String,
   password: String,
-  role: String,
+  role: String,         // 'user', 'host', 'admin'
   properties: [ObjectId],
-  createdAt: Date
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
-#### Property Model
+### Property Model
 ```javascript
 {
   title: String,
@@ -139,25 +137,18 @@ fauxdoorz/
   location: String,
   pricePerNight: Number,
   images: [String],
+  amenities: [String],
+  bedrooms: Number,
+  bathrooms: Number,
+  maxGuests: Number,
   owner: ObjectId,
-  status: String,
-  createdAt: Date
+  status: String,      // 'available', 'booked', 'pending'
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
-#### Session Model
-```javascript
-{
-  userId: ObjectId,
-  email: String,
-  lastActivity: Date,
-  isActive: Boolean,
-  deviceInfo: String,
-  ipAddress: String
-}
-```
-
-### Environment Variables
+## 🔐 Environment Variables
 
 Required environment variables:
 ```plaintext
@@ -166,7 +157,15 @@ NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_nextauth_secret_key
 ```
 
-### Contributing
+Optional environment variables:
+```plaintext
+NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token
+CLOUDINARY_URL=your_cloudinary_url
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -174,11 +173,11 @@ NEXTAUTH_SECRET=your_nextauth_secret_key
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-### License
+## 📜 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-### Acknowledgments
+## 🙏 Acknowledgments
 
 - [Next.js](https://nextjs.org)
 - [NextAuth.js](https://next-auth.js.org)
@@ -186,4 +185,9 @@ This project is licensed under the MIT License.
 - [TailwindCSS](https://tailwindcss.com)
 - [React Icons](https://react-icons.github.io/react-icons)
 
-> Note: Authentication is handled through NextAuth.js. Direct API endpoints for signin/signup are not used.
+---
+
+<p align="center">
+  Made with ❤️ by [Teheskhiel Fritz]
+</p>
+```

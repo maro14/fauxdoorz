@@ -41,7 +41,7 @@ export default function PropertyList({ properties, onPropertyUpdated, onProperty
       
       {properties.length === 0 ? (
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
-          <p className="text-gray-500 mb-4">You haven't added any properties yet.</p>
+          <p className="text-gray-500 mb-4">You haven&apos;t added any properties yet.</p>
           <p className="text-sm text-gray-400">Create your first property listing using the form above.</p>
         </div>
       ) : (
