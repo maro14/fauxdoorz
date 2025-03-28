@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
 
-export default function ProfileSetting() {
-  const { data: session, status } = useSession();
+export default function ProfileSettings({ userData }) {
+  const { data: session, update } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', content: '' });
@@ -16,14 +17,14 @@ export default function ProfileSetting() {
   });
 
   useEffect(() => {
-    if (status === 'authenticated' && session?.user) {
+    if (userData) {
       setFormData(prevState => ({
         ...prevState,
-        name: session.user.name || '',
-        email: session.user.email || ''
+        name: userData.name || '',
+        email: userData.email || ''
       }));
     }
-  }, [session, status]);
+  }, [userData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -75,6 +76,18 @@ export default function ProfileSetting() {
         throw new Error(data.message || 'Failed to update profile');
       }
 
+      // Update the session if email or name changed
+      if (session?.user?.email !== formData.email || session?.user?.name !== formData.name) {
+        await update({
+          ...session,
+          user: {
+            ...session.user,
+            name: formData.name,
+            email: formData.email
+          }
+        });
+      }
+
       setMessage({ type: 'success', content: 'Profile updated successfully' });
       
       // Clear password fields after successful update
@@ -92,17 +105,8 @@ export default function ProfileSetting() {
     }
   };
 
-  if (status === 'loading') {
-    return <div className="flex justify-center p-8">Loading...</div>;
-  }
-
-  if (status === 'unauthenticated') {
-    router.push('/auth/signin');
-    return null;
-  }
-
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">Profile Settings</h2>
       
       {message.content && (
@@ -122,7 +126,7 @@ export default function ProfileSetting() {
             type="text"
             value={formData.name}
             onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
           />
         </div>
         
@@ -136,7 +140,7 @@ export default function ProfileSetting() {
             type="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
           />
         </div>
         
@@ -154,7 +158,7 @@ export default function ProfileSetting() {
                 type="password"
                 value={formData.currentPassword}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
               />
             </div>
             
@@ -168,7 +172,7 @@ export default function ProfileSetting() {
                 type="password"
                 value={formData.newPassword}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
               />
             </div>
             
@@ -182,7 +186,7 @@ export default function ProfileSetting() {
                 type="password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
               />
             </div>
           </div>
@@ -192,9 +196,16 @@ export default function ProfileSetting() {
           <button
             type="submit"
             disabled={loading}
-            className={`px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+            className={`px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
-            {loading ? 'Saving...' : 'Save Changes'}
+            {loading ? (
+              <span className="flex items-center">
+                <LoadingSpinner size="sm" color="white" />
+                <span className="ml-2">Saving...</span>
+              </span>
+            ) : (
+              'Save Changes'
+            )}
           </button>
         </div>
       </form>
