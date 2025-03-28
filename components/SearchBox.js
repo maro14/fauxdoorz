@@ -26,7 +26,7 @@ export default function SearchBox({ onSearch }) {
           {!isExpanded && (
             <div 
               onClick={() => setIsExpanded(true)}
-              className="flex items-center p-3 cursor-pointer"
+              className="flex items-center p-3 cursor-pointer hover:bg-gray-50 transition-colors"
             >
               <div className="flex items-center flex-1 px-4">
                 <FiSearch className="h-5 w-5 text-gray-400 mr-3" />
@@ -82,14 +82,23 @@ export default function SearchBox({ onSearch }) {
                 </div>
               </div>
 
-              {/* Search Button */}
-              <button
-                type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full py-2.5 transition-colors duration-200 flex items-center justify-center gap-2"
-              >
-                <FiSearch className="h-5 w-5" />
-                <span>Search</span>
-              </button>
+              {/* Action Buttons */}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsExpanded(false)}
+                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full py-2.5 transition-colors duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white rounded-full py-2.5 transition-colors duration-200 flex items-center justify-center gap-2"
+                >
+                  <FiSearch className="h-5 w-5" />
+                  <span>Search</span>
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -97,7 +106,7 @@ export default function SearchBox({ onSearch }) {
         {/* Error Message */}
         {error && (
           <div className="absolute -bottom-8 left-0 right-0 text-center">
-            <p className="text-sm text-red-500">{error}</p>
+            <p className="text-sm text-red-500 bg-white/80 rounded-lg py-1 px-2 inline-block">{error}</p>
           </div>
         )}
       </form>

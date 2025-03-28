@@ -2,11 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-/* globals.css */
-
-body {
-    background-color: #e4b27e; /* This is the orange-300 color from Tailwind */
-    min-height: 100vh; /* Ensures it covers the full viewport */
+@layer base {
+  :root {
+    --font-sans: var(--font-plus-jakarta), var(--font-inter), system-ui, -apple-system;
+  }
+  
+  body {
+    @apply font-sans antialiased;
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    min-height: 100vh;
     margin: 0;
     padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-bold tracking-tight;
+  }
+}
+
+/* Additional modern styling elements */
+@layer components {
+    .glass-card {
+        @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-lg;
+    }
+    
+    .content-container {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
 }

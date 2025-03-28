@@ -1,62 +1,106 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import PropertyForm from '@/components/dashboard/PropertyForm';
-import PropertyList from '@/components/dashboard/PropertyList';
 
 export default function Dashboard() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { data: session } = useSession();
   const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/signin');
-    }
-  }, [status, router]);
-
-  useEffect(() => {
-    if (session?.user) {
-      fetchUserProperties();
-    }
-  }, [session]);
-
-  const fetchUserProperties = async () => {
+  const fetchProperties = async () => {
     try {
       const res = await fetch('/api/properties/user');
       const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to fetch properties');
+      }
+      
       setProperties(data);
     } catch (error) {
-      console.error('Error fetching properties:', error);
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (status === 'loading' || isLoading) {
-    return <div className="text-center mt-10">Loading...</div>;
+  useEffect(() => {
+    if (session) {
+      fetchProperties();
+    }
+  }, [session]);
+
+  const handlePropertyAdded = () => {
+    fetchProperties();
+  };
+
+  const resetFormData = {
+    title: '',
+    description: '',
+    location: '',
+    pricePerNight: '',
+    images: [],
+    bedrooms: 1,
+    bathrooms: 1,
+    maxGuests: 1,
+    amenities: []
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen p-6">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
+          <div className="space-y-4">
+            <div className="h-40 bg-gray-200 rounded"></div>
+            <div className="h-40 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Property Dashboard</h1>
+    <div className="min-h-screen p-6 max-w-7xl mx-auto">
+      <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Property Form */}
-        <div className="lg:col-span-1">
-          <PropertyForm onPropertyAdded={fetchUserProperties} />
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-md">
+          <p className="text-red-700">{error}</p>
         </div>
+      )}
 
-        {/* Property List */}
-        <div className="lg:col-span-2">
-          <PropertyList 
-            properties={properties} 
-            onPropertyUpdated={fetchUserProperties}
-            onPropertyDeleted={fetchUserProperties}
-          />
+      <div className="grid gap-8">
+        <PropertyForm 
+          onPropertyAdded={handlePropertyAdded}
+          initialData={resetFormData}
+        />
+        
+        <div className="space-y-6">
+          <h2 className="text-2xl font-semibold">Your Properties</h2>
+          {properties.length === 0 ? (
+            <p className="text-gray-500">No properties listed yet.</p>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {properties.map((property) => (
+                <div 
+                  key={property._id}
+                  className="bg-white rounded-lg shadow-sm p-4 border border-gray-100"
+                >
+                  <h3 className="font-semibold">{property.title}</h3>
+                  <p className="text-gray-600 mt-2">{property.location}</p>
+                  <p className="text-orange-600 font-medium mt-2">
+                    ${property.pricePerNight} per night
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
-} 
+}
+
+Dashboard.auth = true;

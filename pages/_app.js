@@ -3,6 +3,17 @@ import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/globals.css';
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+})
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-plus-jakarta',
+})
 
 // Auth protection wrapper
 function AuthWrapper({ children, requireAuth }) {
@@ -11,7 +22,15 @@ function AuthWrapper({ children, requireAuth }) {
   const loading = status === "loading";
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex flex-col items-center space-y-4">
+          {/* Spinner */}
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500"></div>
+          <p className="text-lg font-medium text-gray-700">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   if (requireAuth && !session) {
@@ -25,14 +44,15 @@ function AuthWrapper({ children, requireAuth }) {
 function MyApp({ Component, pageProps: { session, requireAuth, ...pageProps } }) {
   const router = useRouter();
   const isAuthPage = router.pathname.startsWith('/auth/');
-
   return (
     <SessionProvider session={session}>
-      <AuthWrapper requireAuth={requireAuth}>
-        {!isAuthPage && <Navbar />}
-        <Component {...pageProps} />
-        {!isAuthPage && <Footer />}
-      </AuthWrapper>
+      <div className={`${inter.variable} ${plusJakarta.variable} font-sans`}>
+        <AuthWrapper requireAuth={requireAuth}>
+          {!isAuthPage && <Navbar />}
+          <Component {...pageProps} />
+          {!isAuthPage && <Footer />}
+        </AuthWrapper>
+      </div>
     </SessionProvider>
   );
 }
