@@ -72,9 +72,11 @@ export default function Home() {
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="full-width-container">
       {/* Hero Section */}
-      <HeroSection onSearch={handleSearch} />
+      <div className="full-bleed">
+        <HeroSection onSearch={handleSearch} />
+      </div>
 
       {/* Loading Indicator */}
       {loading && (
@@ -91,11 +93,17 @@ export default function Home() {
       )}
 
       {/* Featured Properties Section */}
-      {!loading && <FeaturedPropertiesSection featuredProperties={featuredProperties} />}
+      {!loading && (
+        <div className="px-4 sm:px-6 lg:px-8 max-w-[2000px] mx-auto">
+          <FeaturedPropertiesSection featuredProperties={featuredProperties} />
+        </div>
+      )}
 
       {/* Search Results Section - Only Show if Search is Performed */}
       {searchPerformed && !loading && (
-        <SearchResultsSection properties={properties} />
+        <div className="px-4 sm:px-6 lg:px-8 max-w-[2000px] mx-auto">
+          <SearchResultsSection properties={properties} />
+        </div>
       )}
     </div>
   );

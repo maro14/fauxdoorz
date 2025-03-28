@@ -4,12 +4,13 @@ import SearchBox from '../SearchBox';
 export default function HeroSection({ onSearch }) {
   return (
     <section
-      className="relative flex flex-col items-center justify-center mb-12"
+      className="relative flex flex-col items-center justify-center mb-12 w-full"
       style={{
         backgroundImage: `url(/House.jpg)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         height: '90vh',
+        width: '100%',
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/40"></div>

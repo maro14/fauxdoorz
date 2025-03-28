@@ -13,6 +13,8 @@
     min-height: 100vh;
     margin: 0;
     padding: 0;
+    width: 100%;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -29,4 +31,29 @@
     .content-container {
         @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
     }
+
+    .full-width-container {
+        width: 100vw;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    .full-bleed {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+    }
+}
+
+/* Add this to your existing CSS */
+@layer utilities {
+  .container-home {
+    width: 100%;
+    max-width: 1920px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
