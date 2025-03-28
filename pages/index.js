@@ -3,6 +3,10 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import HeroSection from '../components/home/HeroSection';
 import FeaturedPropertiesSection from '../components/home/FeaturedPropertiesSection';
 import SearchResultsSection from '../components/home/SearchResultsSection';
+import PropertyCategoriesSection from '../components/home/PropertyCategoriesSection';
+import TestimonialsSection from '../components/home/TestimonialsSection';
+import HowItWorksSection from '../components/home/HowItWorksSection';
+import NewsletterSection from '../components/home/NewsletterSection';
 
 export default function Home() {
   const [properties, setProperties] = useState([]);
@@ -92,18 +96,35 @@ export default function Home() {
         </div>
       )}
 
-      {/* Featured Properties Section */}
-      {!loading && (
-        <div className="px-4 sm:px-6 lg:px-8 max-w-[2000px] mx-auto">
-          <FeaturedPropertiesSection featuredProperties={featuredProperties} />
-        </div>
-      )}
-
       {/* Search Results Section - Only Show if Search is Performed */}
       {searchPerformed && !loading && (
         <div className="px-4 sm:px-6 lg:px-8 max-w-[2000px] mx-auto">
           <SearchResultsSection properties={properties} />
         </div>
+      )}
+
+      {/* Only show these sections if no search has been performed */}
+      {!searchPerformed && (
+        <>
+          {/* How It Works Section */}
+          <HowItWorksSection />
+
+          {/* Featured Properties Section */}
+          {!loading && (
+            <div className="px-4 sm:px-6 lg:px-8 max-w-[2000px] mx-auto">
+              <FeaturedPropertiesSection featuredProperties={featuredProperties} />
+            </div>
+          )}
+
+          {/* Property Categories Section */}
+          <PropertyCategoriesSection />
+
+          {/* Testimonials Section */}
+          <TestimonialsSection />
+
+          {/* Newsletter Section */}
+          <NewsletterSection />
+        </>
       )}
     </div>
   );
