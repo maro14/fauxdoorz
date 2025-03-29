@@ -94,7 +94,6 @@ const PropertySchema = new mongoose.Schema({
 });
 
 // Add indexes for better query performance
-PropertySchema.index({ location: 1 });
 PropertySchema.index({ owner: 1 });
 PropertySchema.index({ pricePerNight: 1 });
 PropertySchema.index({ status: 1 });

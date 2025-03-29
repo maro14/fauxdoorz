@@ -25,9 +25,8 @@ async function dbConnect() {
   }
 
   if (!cached.promise) {
+    // Remove deprecated options
     const opts = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       bufferCommands: false,
     };
 
