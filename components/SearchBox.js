@@ -1,6 +1,6 @@
 // components/SearchBox.js
 import { useState } from 'react';
-import { FiSearch, FiMapPin, FiDollarSign } from 'react-icons/fi';
+import { FiSearch, FiMapPin, FiDollarSign, FiX } from 'react-icons/fi';
 import useSearch from '../hooks/useSearch';
 
 export default function SearchBox({ onSearch }) {
@@ -16,6 +16,12 @@ export default function SearchBox({ onSearch }) {
   } = useSearch(onSearch);
 
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleClear = () => {
+    setLocation('');
+    setMinPrice('');
+    setMaxPrice('');
+  };
 
   return (
     <div className="max-w-2xl mx-auto px-4">
@@ -50,6 +56,15 @@ export default function SearchBox({ onSearch }) {
                   className="w-full pl-10 pr-4 py-2.5 border-0 focus:ring-0 rounded-full bg-gray-50"
                   placeholder="Where to?"
                 />
+                {location && (
+                  <button
+                    type="button"
+                    onClick={() => setLocation('')}
+                    className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
+                  >
+                    <FiX className="h-4 w-4" />
+                  </button>
+                )}
               </div>
 
               {/* Price Range */}
@@ -106,7 +121,9 @@ export default function SearchBox({ onSearch }) {
         {/* Error Message */}
         {error && (
           <div className="absolute -bottom-8 left-0 right-0 text-center">
-            <p className="text-sm text-red-500 bg-white/80 rounded-lg py-1 px-2 inline-block">{error}</p>
+            <p className="text-sm text-red-500 bg-white/80 backdrop-blur-sm rounded-lg py-1 px-2 inline-block shadow-sm">
+              {error}
+            </p>
           </div>
         )}
       </form>

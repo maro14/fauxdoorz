@@ -5,6 +5,7 @@ export default function useSearch(onSearch) {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [error, setError] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -16,10 +17,7 @@ export default function useSearch(onSearch) {
     const min = Number(minPrice);
     const max = Number(maxPrice);
 
-    console.log('Location:', location);
-    console.log('Min Price:', minPrice);
-    console.log('Max Price:', maxPrice);
-
+    // Validation checks
     if (minPrice && maxPrice && min > max) {
       setError('Minimum price cannot be greater than maximum price');
       return;
@@ -33,13 +31,25 @@ export default function useSearch(onSearch) {
     // Build search criteria
     const searchCriteria = {
       location: location.trim(),
-      priceRange: minPrice && maxPrice ? [min, max] : undefined,
+      minPrice: minPrice ? min : undefined,
+      maxPrice: maxPrice ? max : undefined,
     };
 
-    console.log('Search Criteria:', searchCriteria);
-
+    // Show loading state
+    setIsSearching(true);
+    
     // Trigger search with validated criteria
-    onSearch(searchCriteria);
+    onSearch(searchCriteria)
+      .finally(() => {
+        setIsSearching(false);
+      });
+  };
+
+  const resetSearch = () => {
+    setLocation('');
+    setMinPrice('');
+    setMaxPrice('');
+    setError(null);
   };
 
   return {
@@ -50,6 +60,8 @@ export default function useSearch(onSearch) {
     maxPrice,
     setMaxPrice,
     error,
+    isSearching,
     handleSearch,
+    resetSearch,
   };
 }
