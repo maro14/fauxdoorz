@@ -5,13 +5,42 @@ import authMiddleware from '../../../middlewares/authMiddleware';
 export default async function handler(req, res) {
   await dbConnect();
 
-  // Fix: Use a single switch statement to handle all methods
   switch (req.method) {
     case 'GET':
       try {
-        const properties = await Property.find({})
+        // Parse query parameters
+        const { location, priceRange, propertyType, amenities, featured } = req.query;
+        
+        // Build filter object
+        const filter = {};
+        
+        if (location) {
+          filter.location = { $regex: location, $options: 'i' };
+        }
+        
+        if (priceRange) {
+          const [min, max] = priceRange.split('-').map(Number);
+          filter.pricePerNight = { $gte: min || 0 };
+          if (max) filter.pricePerNight.$lte = max;
+        }
+        
+        if (propertyType) {
+          filter.propertyType = propertyType;
+        }
+        
+        if (amenities) {
+          const amenitiesList = amenities.split(',');
+          filter.amenities = { $all: amenitiesList };
+        }
+        
+        if (featured === 'true') {
+          filter.featured = true;
+        }
+        
+        // Execute query with filters
+        const properties = await Property.find(filter)
           .sort({ createdAt: -1 })
-          .limit(6);
+          .limit(req.query.limit ? parseInt(req.query.limit) : 6);
 
         // Format the price and ensure images are present
         const formattedProperties = properties.map(property => ({

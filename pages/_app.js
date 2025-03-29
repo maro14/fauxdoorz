@@ -1,7 +1,7 @@
 import { SessionProvider, useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Navbar from '../components/ui/Navbar';
+import Footer from '../components/ui/Footer';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import '../styles/globals.css';
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'

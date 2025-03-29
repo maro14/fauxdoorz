@@ -29,7 +29,7 @@ const PropertySchema = new mongoose.Schema({
   }],
   amenities: [{
     type: String,
-    enum: ['wifi', 'parking', 'pool', 'gym', 'ac', 'kitchen', 'tv', 'washer']
+    enum: ['wifi', 'parking', 'pool', 'gym', 'ac', 'kitchen', 'tv', 'washer', 'waterfront']
   }],
   bedrooms: {
     type: Number,
@@ -46,10 +46,47 @@ const PropertySchema = new mongoose.Schema({
     required: [true, 'Please specify maximum number of guests'],
     min: [1, 'Must accommodate at least 1 guest']
   },
+  propertyType: {
+    type: String,
+    enum: ['house', 'apartment', 'condo', 'villa', 'cabin', 'cottage', 'other'],
+    default: 'house'
+  },
+  petsAllowed: {
+    type: Boolean,
+    default: false
+  },
+  smokingAllowed: {
+    type: Boolean,
+    default: false
+  },
+  checkInTime: {
+    type: String,
+    default: '3:00 PM'
+  },
+  checkOutTime: {
+    type: String,
+    default: '11:00 AM'
+  },
+  cleaningFee: {
+    type: Number,
+    default: 50
+  },
+  serviceFee: {
+    type: Number,
+    default: 30
+  },
+  available: {
+    type: Boolean,
+    default: true
+  },
+  featured: {
+    type: Boolean,
+    default: false
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: [true, 'Property must have an owner']
   },
   status: {
     type: String,

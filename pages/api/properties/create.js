@@ -27,7 +27,15 @@ export default async function handler(req, res) {
       bedrooms,
       bathrooms,
       maxGuests,
-      amenities
+      amenities,
+      propertyType,
+      petsAllowed,
+      smokingAllowed,
+      checkInTime,
+      checkOutTime,
+      cleaningFee,
+      serviceFee,
+      featured
     } = req.body;
 
     // Validate required fields
@@ -46,6 +54,14 @@ export default async function handler(req, res) {
       bathrooms: Number(bathrooms),
       maxGuests: Number(maxGuests),
       amenities: amenities || [],
+      propertyType: propertyType || 'house',
+      petsAllowed: petsAllowed || false,
+      smokingAllowed: smokingAllowed || false,
+      checkInTime: checkInTime || '3:00 PM',
+      checkOutTime: checkOutTime || '11:00 AM',
+      cleaningFee: Number(cleaningFee) || 50,
+      serviceFee: Number(serviceFee) || 30,
+      featured: featured || false,
       owner: session.user.id
     });
 
@@ -57,10 +73,10 @@ export default async function handler(req, res) {
 
     res.status(201).json({ 
       message: 'Property created successfully',
-      property 
+      property
     });
   } catch (error) {
     console.error('Create property error:', error);
-    res.status(500).json({ message: 'Failed to save property: ' + error.message });
+    res.status(500).json({ message: error.message });
   }
 }
