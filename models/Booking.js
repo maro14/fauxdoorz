@@ -23,6 +23,20 @@ const BookingSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Please provide the total price for the booking'],
   },
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'cancelled', 'completed'],
+    default: 'pending',
+  },
+  guestCount: {
+    type: Number,
+    required: [true, 'Please provide the number of guests'],
+    min: [1, 'At least one guest is required'],
+  },
+  specialRequests: {
+    type: String,
+    maxlength: [500, 'Special requests cannot exceed 500 characters'],
+  },
   createdAt: {
     type: Date,
     default: Date.now,
