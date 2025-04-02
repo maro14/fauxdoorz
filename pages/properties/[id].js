@@ -115,7 +115,7 @@ export default function PropertyDetails() {
   };
 
   return (
-    <div className="container mx-auto px-6 py-10 max-w-7xl">
+    <div className="container mx-auto px-6 py-12 max-w-7xl">
       {/* Back button - remains the same */}
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-10">

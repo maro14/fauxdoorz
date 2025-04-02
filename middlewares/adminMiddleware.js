@@ -1,8 +1,16 @@
 const adminMiddleware = (handler) => (req, res) => {
-    if (!req.user || !req.user.isAdmin) {
-        return res.status(403).json({ message: 'Forbidden: Admins only' });
+    // Check for both user existence and admin role
+    if (!req.user?.role === 'admin') {
+        return res.status(403).json({ 
+            message: 'Forbidden: Admin access required',
+            error: 'UNAUTHORIZED_ADMIN_ACCESS'
+        });
     }
-    // If the user is an admin, proceed to the next handler
+
+    // Add admin context to request
+    req.isAdminRequest = true;
+    
+    // Proceed to handler
     return handler(req, res);
 };
 

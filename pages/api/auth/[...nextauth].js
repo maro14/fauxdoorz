@@ -1,47 +1,49 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import dbConnect from '@/utils/dbConnect';
-import User from '@/models/User';
+import dbConnect from '../../../utils/dbConnect';
+import User from '../../../models/User';
 
-export const authOptions = {
+export default NextAuth({
   providers: [
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" }
+        email: { label: 'Email', type: 'text' },
+        password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
+        await dbConnect();
+
         try {
-          await dbConnect();
-          
+          // Find user by email
           const user = await User.findOne({ email: credentials.email }).select('+password');
+          
           if (!user) {
             throw new Error('No user found with this email');
           }
-
-          const isValid = await user.comparePassword(credentials.password);
-          if (!isValid) {
+          
+          // Check password
+          const isPasswordMatch = await user.comparePassword(credentials.password);
+          
+          if (!isPasswordMatch) {
             throw new Error('Invalid password');
           }
-
+          
+          // Return user object without password
           return {
             id: user._id.toString(),
             email: user.email,
-            role: user.role
+            name: user.name,
+            role: user.role,
+            image: user.image
           };
         } catch (error) {
           console.error('Auth error:', error);
-          return null;
+          throw new Error(error.message || 'Authentication failed');
         }
       }
     })
   ],
-  pages: {
-    signIn: '/auth/signin',
-    signUp: '/auth/signup',
-    error: '/auth/error',
-  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -58,11 +60,15 @@ export const authOptions = {
       return session;
     }
   },
-  debug: process.env.NODE_ENV === 'development',
+  pages: {
+    signIn: '/auth/signin',
+    signUp: '/auth/signup',
+    error: '/auth/error',
+  },
   session: {
     strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
-};
-
-export default NextAuth(authOptions); 
+  debug: process.env.NODE_ENV === 'development',
+});

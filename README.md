@@ -185,6 +185,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 <p align="center">
-  Made with ❤️ by [Teheskhiel Fritz]
+  Made with ❤️ by Teheskhiel Fritz
 </p>
 ```
